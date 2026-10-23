@@ -1,0 +1,1302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Gallus Lab: an interactive field notebook about the chicken. Anatomy, breeds, evolution, intelligence and relationships.">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>Gallus Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a field notebook in the shape of a product reveal. One page per chapter, big clean headlines, and every illustration is a pencil-and-wash plate pinned to the page. */
+:root{
+  --bg:#ebeae3; --surface:#f6f5ef; --ink:#22221f; --muted:#66655d; --line:#d3d1c5;
+  --accent:#b5412e; --ochre:#c38a2a; --note:#3d5d79; --soft:#e2e1d8;
+  --paper:#f4f2e9; --graphite:#2a2926;
+  --f-display:"Schibsted Grotesk","Helvetica Neue",Arial,sans-serif;
+  --f-body:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .27 0 0 0 0 .2 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+  --maxw:1160px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#161714; --surface:#1f201c; --ink:#ecebe3; --muted:#a3a298; --line:#34352f;
+  --accent:#e2664f; --ochre:#e2ad4d; --note:#93b5d1; --soft:#272823; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#161714; --surface:#1f201c; --ink:#ecebe3; --muted:#a3a298; --line:#34352f;
+  --accent:#e2664f; --ochre:#e2ad4d; --note:#93b5d1; --soft:#272823; color-scheme:dark}
+
+*{box-sizing:border-box}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+body{background:var(--grain),var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em;line-height:1.06}
+p{margin:0}
+button{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.mono{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.hand{font-family:var(--f-body);font-weight:500;color:var(--note);font-size:15px;line-height:1.3}
+
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 84%,transparent);backdrop-filter:saturate(1.3) blur(14px);-webkit-backdrop-filter:saturate(1.3) blur(14px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:20px;height:54px}
+.brand{font-family:var(--f-display);font-weight:900;letter-spacing:-.02em;font-size:17px;text-decoration:none;display:flex;align-items:center;gap:8px;flex:none}
+.brand i{width:10px;height:13px;border-radius:50%/60% 60% 40% 40%;background:var(--accent);display:inline-block}
+.nav ul{display:flex;gap:2px;list-style:none;margin:0 0 0 auto;padding:0;overflow-x:auto;scrollbar-width:none}
+.nav ul::-webkit-scrollbar{display:none}
+.nav a.tab{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 11px;border-radius:999px;white-space:nowrap}
+.nav a.tab:hover{color:var(--ink)}
+.nav a.tab.on{color:var(--ink);background:var(--soft)}
+@media (max-width:700px){.brand span{display:none}.nav .wrap{gap:8px}.nav a.tab{padding:6px 8px}}
+
+/* pages */
+.view{animation:pageIn .5s cubic-bezier(.2,.7,.1,1)}
+@keyframes pageIn{from{transform:translateY(10px)}to{transform:none}}
+.page{padding-block:clamp(48px,8vw,96px) clamp(56px,8vw,96px)}
+.head{display:grid;gap:14px;margin-bottom:clamp(30px,4vw,48px);max-width:820px}
+.head h2{font-size:clamp(40px,6.6vw,84px);font-weight:800}
+.head h2 em{font-style:normal;color:var(--accent)}
+.head .lede{font-size:clamp(17px,2vw,21px);color:var(--muted);max-width:60ch}
+.sub{margin-top:clamp(56px,8vw,96px);display:grid;gap:10px;margin-bottom:24px;max-width:760px}
+.sub h3{font-size:clamp(28px,3.8vw,44px);font-weight:800}
+.sub p{color:var(--muted);max-width:62ch}
+.nextpage{margin-top:clamp(56px,8vw,96px);border-top:1px solid var(--line);padding-top:24px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:baseline}
+.nextpage a{font-family:var(--f-display);font-weight:800;font-size:clamp(24px,3vw,34px);letter-spacing:-.02em;text-decoration:none}
+.nextpage a:hover{color:var(--accent)}
+
+/* home */
+.hero{padding-block:clamp(48px,8vw,100px) clamp(40px,6vw,72px);text-align:center}
+.hero .wrap{display:grid;gap:20px;justify-items:center}
+.hero h1{font-size:clamp(68px,15vw,196px);font-weight:900;letter-spacing:-.03em;line-height:.9}
+.hero h1 span{color:var(--accent)}
+.hero .lead{font-size:clamp(19px,2.6vw,28px);font-family:var(--f-display);font-weight:500;letter-spacing:-.015em;max-width:26ch}
+.lineup{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(8px,1.6vw,18px);width:100%;max-width:980px;margin-top:16px}
+.mini{all:unset;cursor:pointer;display:grid;gap:6px;text-align:left}
+.mini .plate{transition:transform .35s cubic-bezier(.2,.7,.1,1)}
+.mini:hover .plate{transform:translateY(-4px) rotate(-.4deg)}
+.mini:focus-visible .plate{outline:2px solid var(--accent);outline-offset:3px}
+.mini b{font-family:var(--f-display);font-size:clamp(15px,1.8vw,18px)}
+.mini .hand{font-size:13px}
+@media (max-width:640px){.lineup{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:16px;overflow:hidden;width:100%;max-width:980px;margin-top:22px;text-align:left}
+.stats div{background:var(--surface);padding:18px;display:grid;gap:4px}
+.stats b{font-family:var(--f-display);font-size:clamp(26px,3.6vw,40px);font-weight:800;letter-spacing:-.015em;font-variant-numeric:tabular-nums}
+.stats span{font-size:13px;color:var(--muted);line-height:1.35}
+@media (max-width:640px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.toc{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.toc a{display:grid;grid-template-columns:80px minmax(0,1fr) auto;gap:16px;align-items:baseline;padding:22px 4px;border-bottom:1px solid var(--line);text-decoration:none}
+.toc a:hover h3{color:var(--accent)}
+.toc h3{font-size:clamp(26px,4vw,44px);font-weight:800;transition:color .2s}
+.toc p{color:var(--muted);font-size:15px;margin-top:4px}
+.toc .arrow{font-size:22px;color:var(--muted)}
+@media (max-width:640px){.toc a{grid-template-columns:44px minmax(0,1fr)}.toc .arrow{display:none}}
+
+/* plates */
+.plate{--p-paper:#f4f2e9;position:relative;background:var(--grain),var(--p-paper);border-radius:6px;box-shadow:0 1px 0 rgba(0,0,0,.06),0 10px 30px -18px rgba(40,30,10,.45);overflow:hidden;color:#2a2926}
+.plate svg{display:block;width:100%;height:auto}
+.plate .cap{position:absolute;right:14px;bottom:8px;font-family:var(--f-body);font-size:12.5px;font-style:italic;color:#3d5d79;pointer-events:none}
+.pl .ink{fill:none;stroke:#1f1e1c;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.pl .ink2{opacity:.16;stroke-width:.8}
+.pl .fine{fill:none;stroke:#1f1e1c;stroke-width:.7;opacity:.55;stroke-linecap:round}
+.pl .hatchg{stroke:none}
+.pl .ghost{fill:none;stroke:#2a2926;stroke-width:1.2;stroke-dasharray:2 5;opacity:.45}
+.pl .label{font-family:var(--f-body);font-size:14px;font-weight:600;fill:#2a2926;paint-order:stroke;stroke:#f4f2e9;stroke-width:5px;stroke-linejoin:round}
+.pl .slabel{font-family:var(--f-mono);font-size:10px;letter-spacing:.08em;fill:#6b6a62}
+.pin{cursor:pointer}
+.pin .lead{stroke:#2a2926;stroke-width:.9;opacity:.55;fill:none}
+.pin .anchor{fill:#2a2926}
+.pin .pc{fill:#f4f2e9;stroke:#2a2926;stroke-width:1.3;transition:fill .2s}
+.pin text.num{fill:#2a2926;font-family:var(--f-body);font-size:11.5px;font-weight:600;text-anchor:middle;pointer-events:none}
+.pin:hover .pc,.pin:focus .pc{stroke-width:2.2}
+.pin.on .pc{fill:#b5412e;stroke:#b5412e}
+.pin.on text.num{fill:#fff}
+.pin.on .lead{opacity:1;stroke:#b5412e}
+.pin:focus{outline:none}
+.pin .tag{display:none}
+.pin.on .tag{display:inline}
+
+/* controls */
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.seg{display:inline-flex;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:none;cursor:pointer;padding:8px 15px;border-radius:999px;font-size:14px;font-weight:500;color:var(--muted);transition:background .2s,color .2s}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.08),0 0 0 1px var(--line)}
+.seg .arrow{color:var(--muted);opacity:.5;align-self:center;font-size:11px;pointer-events:none}
+
+/* anatomy */
+.anat{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;align-items:start}
+.fig{transition:opacity .22s ease}
+.fig.out{opacity:0}
+.panel{display:grid;gap:14px;min-width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px}
+.kv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.kv div{display:grid;gap:2px}
+.kv b{font-family:var(--f-display);font-size:21px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kv span{font-size:12px;color:var(--muted);line-height:1.3}
+.detail{display:grid;gap:8px;min-height:180px;align-content:start}
+.detail h3{font-size:28px;font-weight:800}
+.detail .term{font-family:var(--f-body);font-size:15px;font-weight:500;color:var(--note)}
+.detail p.d{opacity:.88;max-width:52ch}
+.parts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+.parts button{all:unset;cursor:pointer;display:flex;gap:10px;align-items:center;padding:7px 9px;border-radius:9px;font-size:14px;width:100%;box-sizing:border-box}
+.parts button:hover{background:var(--soft)}
+.parts button.on{background:var(--soft);font-weight:600}
+.parts button:focus-visible{outline:2px solid var(--accent)}
+.parts .n{font-family:var(--f-body);font-weight:600;font-size:11px;width:22px;height:22px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;flex:none;color:var(--muted)}
+.parts button.on .n{background:var(--accent);border-color:var(--accent);color:#fff}
+@media (max-width:900px){.anat{grid-template-columns:minmax(0,1fr)}}
+.versus{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.versus table{width:100%;border-collapse:collapse;min-width:560px}
+.versus th,.versus td{text-align:left;padding:14px 18px;border-bottom:1px solid var(--line);vertical-align:top;font-size:15px}
+.versus tr:last-child td{border-bottom:0}
+.versus thead th{font-family:var(--f-display);font-size:20px;font-weight:800;letter-spacing:-.01em}
+.versus tbody th{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:500;width:22%}
+.versus td{color:var(--ink);opacity:.9}
+
+/* field guide */
+.gridcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.breed{display:grid;gap:10px;align-content:start}
+.breed .plate{aspect-ratio:510/480}
+.breed .plate .cap{right:auto;left:14px;bottom:auto;top:8px}
+.breed h4{font-size:21px;font-weight:800;letter-spacing:-.015em}
+.breed .meta{display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--muted)}
+.breed .meta span{display:flex;gap:6px;align-items:center}
+.eggdot{width:13px;height:17px;border-radius:50%/58% 58% 42% 42%;border:1px solid rgba(0,0,0,.25);display:inline-block;flex:none}
+.breed p{font-size:14.5px;opacity:.88}
+.breed .tagl{font-family:var(--f-body);color:var(--note);font-size:13px;font-weight:500;line-height:1.2}
+.combs{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.comb{display:grid;gap:6px;align-content:start}
+.comb .plate{aspect-ratio:1}
+.comb b{font-family:var(--f-display);font-size:17px}
+.comb p{font-size:13.5px;color:var(--muted);line-height:1.4}
+.feathers{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px}
+.feather{display:grid;gap:6px;align-content:start}
+.feather .plate{aspect-ratio:1/1}
+.feather b{font-family:var(--f-display);font-size:18px}
+.feather .tagl{font-family:var(--f-body);color:var(--note);font-size:13px;font-weight:500;line-height:1.2}
+.feather p{font-size:13.5px;color:var(--muted);line-height:1.45}
+
+/* timeline */
+.rail{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.rail .bar{flex:1;height:2px;background:var(--line);position:relative;border-radius:2px;overflow:hidden}
+.rail .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);width:10%;transition:width .15s}
+.rbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);cursor:pointer;display:grid;place-items:center;font-size:16px;flex:none}
+.rbtn:hover{background:var(--soft)}
+.track{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(260px,320px);gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:18px;scrollbar-width:thin;overscroll-behavior-x:contain}
+.ev{scroll-snap-align:start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px;display:grid;gap:10px;align-content:start;position:relative}
+.ev .when{font-family:var(--f-display);font-size:40px;font-weight:800;letter-spacing:-.02em;line-height:1;font-variant-numeric:tabular-nums}
+.ev .when small{font-size:16px;font-weight:600;color:var(--muted);letter-spacing:0;margin-left:4px}
+.ev h3{font-size:20px;font-weight:700}
+.ev p{font-size:14.5px;color:var(--muted)}
+.ev .era{position:absolute;right:16px;top:18px}
+.ev.key{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.ev.key p,.ev.key .when small,.ev.key .mono{color:color-mix(in srgb,var(--bg) 70%,var(--ink))}
+.day{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:clamp(20px,4vw,56px);align-items:center}
+.dial{max-width:420px;width:100%;margin:0 auto;display:block}
+.dial .face{fill:var(--surface);stroke:var(--line)}
+.dial .tick{stroke:var(--muted);stroke-width:1}
+.dial .tick.major{stroke:var(--ink);stroke-width:2}
+.dial .num{fill:var(--muted);font-family:var(--f-mono);font-size:11px;text-anchor:middle}
+.dial .nightarc{fill:none;stroke:var(--ink);stroke-width:14;opacity:.85}
+.dial .dayarc{fill:none;stroke:var(--ochre);stroke-width:14;opacity:.85}
+.dial .evdot{fill:var(--surface);stroke:var(--accent);stroke-width:2;cursor:pointer}
+.dial .evdot.on{fill:var(--accent)}
+.dial .hand{stroke:var(--ink);stroke-width:2;stroke-linecap:round}
+.dial .hub{fill:var(--ink)}
+.dial .clock{fill:var(--ink);font-family:var(--f-display);font-weight:800;font-size:44px;text-anchor:middle;letter-spacing:-.015em;font-variant-numeric:tabular-nums}
+.dial .clabel{fill:var(--muted);font-family:var(--f-mono);font-size:11px;text-anchor:middle;letter-spacing:.08em}
+.dial .sun{fill:var(--ochre)}
+.dial .moon{fill:var(--ink)}
+.daycard{display:grid;gap:14px}
+.daycard .now h4{font-size:30px;font-weight:800;margin:4px 0 8px}
+.daycard .now p{color:var(--muted);max-width:52ch}
+.range{display:flex;gap:12px;align-items:center}
+.range input{flex:1;min-width:0;accent-color:var(--accent)}
+.daylist{list-style:none;margin:0;padding:10px 0 0;display:grid;gap:2px;border-top:1px solid var(--line)}
+.daylist button{all:unset;cursor:pointer;display:grid;grid-template-columns:60px 1fr;gap:10px;padding:6px 8px;border-radius:8px;font-size:14px;width:100%;box-sizing:border-box}
+.daylist button:hover{background:var(--soft)}
+.daylist button.on{background:var(--soft);font-weight:600}
+.daylist button:focus-visible{outline:2px solid var(--accent)}
+.daylist time{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;padding-top:2px}
+.sr{position:absolute;left:-9999px}
+@media (max-width:860px){.day{grid-template-columns:minmax(0,1fr)}}
+
+/* quiz */
+.quiz{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:20px;align-items:stretch}
+.examcover{background:var(--ink);color:var(--bg);border-radius:20px;padding:clamp(22px,3vw,34px);display:grid;gap:18px;align-content:space-between}
+.examcover h3{font-size:clamp(30px,3.6vw,44px);font-weight:800}
+.examcover p{opacity:.75;max-width:40ch}
+.examcover .mono{color:color-mix(in srgb,var(--bg) 60%,var(--ink))}
+.score{display:flex;gap:6px;flex-wrap:wrap}
+.score i{width:26px;height:32px;border-radius:50%/58% 58% 42% 42%;border:1.5px solid color-mix(in srgb,var(--bg) 40%,var(--ink));display:block}
+.score i.ok{background:var(--ochre);border-color:var(--ochre)}
+.score i.no{border-style:dashed;border-color:var(--accent)}
+.score i.cur{border-color:var(--bg)}
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:clamp(22px,3vw,34px);display:grid;gap:18px;align-content:start}
+.qcard h4{font-size:clamp(22px,2.6vw,30px);font-weight:700}
+.opts{display:grid;gap:8px}
+.opt{all:unset;cursor:pointer;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;transition:border-color .2s,background .2s;box-sizing:border-box}
+.opt:hover:not([disabled]){border-color:var(--ink)}
+.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.opt .k{font-family:var(--f-mono);font-size:12px;width:24px;height:24px;border-radius:6px;background:var(--soft);display:grid;place-items:center;flex:none}
+.opt.right{border-color:var(--ochre);background:color-mix(in srgb,var(--ochre) 14%,var(--surface))}
+.opt.wrong{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+.opt[disabled]{cursor:default}
+.reply{border-left:3px solid var(--ochre);padding:4px 0 4px 14px;display:grid;gap:6px}
+.reply.bad{border-color:var(--accent)}
+.reply .says{font-family:var(--f-body);font-size:17px;font-weight:600;line-height:1.35;color:var(--note)}
+.reply .sci{font-size:14px;color:var(--muted)}
+.qfoot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.btn{border:0;cursor:pointer;background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;font-weight:600;font-size:14px}
+.btn:hover{opacity:.88}
+@media (max-width:860px){.quiz{grid-template-columns:minmax(0,1fr)}}
+
+/* relationships */
+.rel{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;align-items:start}
+.web{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.web svg{display:block;width:100%;height:auto}
+.web .edge{stroke:var(--line);stroke-width:1.5;transition:stroke .2s,opacity .3s}
+.web .edge.on{stroke:var(--accent);stroke-width:2.5}
+.web .elabel{fill:var(--muted);font-family:var(--f-body);font-size:11px;text-anchor:middle;transition:opacity .3s}
+.web .node{cursor:pointer;transition:opacity .3s}
+.web .node circle{fill:var(--bg);stroke:var(--ink);stroke-width:1.5;transition:fill .2s}
+.web .node.human circle{fill:var(--soft)}
+.web .node text{fill:var(--ink);font-family:var(--f-display);font-weight:700;font-size:13px;text-anchor:middle;pointer-events:none}
+.web .node .ic{font-family:var(--f-mono);font-size:10px;fill:var(--muted);font-weight:400;letter-spacing:.06em}
+.web .node.on circle{fill:var(--accent);stroke:var(--accent)}
+.web .node.on text{fill:#fff}
+.web .node:focus{outline:none}
+.web .node:focus circle{stroke-width:3}
+.web .dim{opacity:.18}
+.web .center circle{fill:var(--ink)}
+.web .center text{fill:var(--bg);font-family:var(--f-display);font-weight:800;font-size:18px;text-anchor:middle}
+.web .side{fill:var(--muted);font-family:var(--f-mono);font-size:11px;letter-spacing:.1em}
+.relcard{display:grid;gap:12px}
+.relcard h3{font-size:30px;font-weight:800}
+.relcard .big{font-family:var(--f-display);font-size:48px;font-weight:900;letter-spacing:-.02em;line-height:1;color:var(--accent)}
+.relcard .bigl{font-size:13px;color:var(--muted)}
+.relcard p{opacity:.88}
+.relcard .src{font-size:12px;color:var(--muted)}
+@media (max-width:860px){.rel{grid-template-columns:minmax(0,1fr)}}
+footer{padding-block:32px 56px;border-top:1px solid var(--line)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="rough1" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="1" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="1.4" xChannelSelector="R" yChannelSelector="G"/></filter>
+    <filter id="rough2" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="9" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="2.2" xChannelSelector="R" yChannelSelector="G"/></filter>
+    <filter id="fuzz" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".18" numOctaves="2" seed="4" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="6" xChannelSelector="R" yChannelSelector="G"/></filter>
+    <filter id="wash" x="-8%" y="-8%" width="116%" height="116%"><feTurbulence type="fractalNoise" baseFrequency=".022" numOctaves="3" seed="5" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="3" xChannelSelector="R" yChannelSelector="G" result="d"/><feGaussianBlur in="d" stdDeviation=".6" result="b"/><feTurbulence type="fractalNoise" baseFrequency=".012" numOctaves="2" seed="3" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -.35 1.02" result="m"/><feComposite in="b" in2="m" operator="in"/></filter>
+    <pattern id="hatch" width="3.6" height="3.6" patternUnits="userSpaceOnUse" patternTransform="rotate(38)"><line x1="0" y1="0" x2="0" y2="3.6" stroke="#2a2926" stroke-width=".5" opacity=".6"/></pattern>
+    <pattern id="hatchR" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)"><line x1="0" y1="0" x2="0" y2="4" stroke="#b5412e" stroke-width=".9" opacity=".7"/></pattern>
+    <pattern id="bars" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-24)"><rect width="7" height="3.4" fill="#2b2c2a" opacity=".78"/></pattern>
+    <radialGradient id="candle" cx="50%" cy="55%" r="55%"><stop offset="0" stop-color="#ffb04a" stop-opacity=".75"/><stop offset=".7" stop-color="#f08a2c" stop-opacity=".25"/><stop offset="1" stop-color="#f08a2c" stop-opacity="0"/></radialGradient>
+  </defs>
+</svg>
+
+<nav class="nav" aria-label="Pages">
+  <div class="wrap">
+    <a class="brand" href="#home"><i aria-hidden="true"></i>GALLUS <span>LAB</span></a>
+    <ul>
+      <li><a class="tab" href="#anatomy">Anatomy</a></li>
+      <li><a class="tab" href="#breeds">Field Guide</a></li>
+      <li><a class="tab" href="#timeline">Timeline</a></li>
+      <li><a class="tab" href="#intelligence">Intelligence</a></li>
+      <li><a class="tab" href="#relationships">Relationships</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+<!-- HOME -->
+<div class="view" data-view="home">
+  <header class="hero">
+    <div class="wrap">
+      <p class="mono">Field notebook · <i>Gallus gallus domesticus</i></p>
+      <h1>Chicken<span>.</span></h1>
+      <p class="lead">Sixty-six million years of dinosaur, now living in the backyard.</p>
+      <div class="lineup" id="lineup"></div>
+      <div class="stats">
+        <div><b>25B+</b><span>chickens alive at any moment</span></div>
+        <div><b>~70%</b><span>of all bird biomass on Earth is farmed poultry</span></div>
+        <div><b>14</b><span>neck vertebrae (you have 7)</span></div>
+        <div><b>3,500</b><span>years since domestication</span></div>
+      </div>
+    </div>
+  </header>
+  <section class="wrap" style="padding-bottom:72px">
+    <p class="mono" style="margin-bottom:8px">In this notebook</p>
+    <ul class="toc">
+      <li><a href="#anatomy"><span class="hand">p. 1</span><div><h3>Anatomy</h3><p>Egg, embryo, chick and adult, inside and out. Hen and rooster compared.</p></div><span class="arrow">→</span></a></li>
+      <li><a href="#breeds"><span class="hand">p. 2</span><div><h3>Field Guide</h3><p>Thirteen breeds as hens and roosters, plus feather types and patterns.</p></div><span class="arrow">→</span></a></li>
+      <li><a href="#timeline"><span class="hand">p. 3</span><div><h3>Timeline</h3><p>From the first shelled egg to today, plus a chicken's 24 hours.</p></div><span class="arrow">→</span></a></li>
+      <li><a href="#intelligence"><span class="hand">p. 4</span><div><h3>Intelligence</h3><p>An exam written by hens, for humans.</p></div><span class="arrow">→</span></a></li>
+      <li><a href="#relationships"><span class="hand">p. 5</span><div><h3>Relationships</h3><p>How chickens connect to soil, predators, disease, climate and us.</p></div><span class="arrow">→</span></a></li>
+    </ul>
+  </section>
+</div>
+
+<!-- ANATOMY -->
+<div class="view page" data-view="anatomy" hidden>
+  <div class="wrap">
+    <div class="head">
+      <p class="mono">p. 1 · Anatomy</p>
+      <h2>One bird. <em>Four bodies.</em></h2>
+      <p class="lede">Follow the chicken from a 58-gram egg to a full-grown bird. Switch to Inner to see what's under the shell, down and feathers.</p>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Life stage" id="stageSeg">
+        <button type="button" data-stage="egg" aria-pressed="false">Egg</button><span class="arrow" aria-hidden="true">→</span>
+        <button type="button" data-stage="embryo" aria-pressed="false">Embryo</button><span class="arrow" aria-hidden="true">→</span>
+        <button type="button" data-stage="chick" aria-pressed="false">Chick</button><span class="arrow" aria-hidden="true">→</span>
+        <button type="button" data-stage="chicken" aria-pressed="true">Chicken</button>
+      </div>
+      <div class="seg" role="group" aria-label="Layer" id="layerSeg">
+        <button type="button" data-layer="outer" aria-pressed="true">Outer</button>
+        <button type="button" data-layer="inner" aria-pressed="false">Inner</button>
+      </div>
+      <div class="seg" role="group" aria-label="Sex" id="sexSeg">
+        <button type="button" data-sex="hen" aria-pressed="true">Hen</button>
+        <button type="button" data-sex="rooster" aria-pressed="false">Rooster</button>
+      </div>
+    </div>
+    <div class="anat">
+      <div class="plate" id="stage">
+                <svg class="pl" viewBox="0 0 600 520" role="img" aria-labelledby="figTitle"><title id="figTitle">Anatomy plate</title><g class="fig" id="fig"></g></svg>
+        <span class="cap" id="figCap"></span>
+      </div>
+      <div class="panel">
+        <div class="card kv" id="kv"></div>
+        <div class="card detail" id="detail" aria-live="polite"></div>
+        <div class="card"><p class="mono" style="margin-bottom:10px">Parts on this plate</p><ul class="parts" id="parts"></ul></div>
+      </div>
+    </div>
+
+    <div class="sub">
+      <p class="mono">Comparison</p>
+      <h3>Hen vs rooster</h3>
+      <p>Same species, different equipment. Use the Hen and Rooster switch on the plate above to compare the labeled parts.</p>
+    </div>
+    <div class="versus">
+      <table>
+        <thead><tr><th></th><th>Hen</th><th>Rooster</th></tr></thead>
+        <tbody>
+          <tr><th>Comb &amp; wattles</th><td>Smaller and paler, brightening when she starts laying</td><td>Large and deep red, a signal of health and testosterone</td></tr>
+          <tr><th>Hackle &amp; saddle</th><td>Rounded feather tips</td><td>Long, pointed, glossy feathers that drape over the neck (hackle) and lower back (saddle)</td></tr>
+          <tr><th>Tail</th><td>Short, fan-shaped, held fairly upright</td><td>Long curved sickle feathers arching over the main tail</td></tr>
+          <tr><th>Legs</th><td>Spurs small or absent</td><td>Sharp spurs that keep growing with age</td></tr>
+          <tr><th>Size</th><td>Lighter build</td><td>Often 25–40% heavier, with a more upright stance</td></tr>
+          <tr><th>Voice</th><td>Egg song, clucks and the broody growl</td><td>Crowing, food calls (tidbitting) and the loudest alarms</td></tr>
+          <tr><th>Inside</th><td>Only the left ovary and oviduct develop. She stores calcium in special medullary bone for shells.</td><td>Two testes inside the body, near the kidneys, not outside</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="nextpage"><span class="mono">Next page</span><a href="#breeds">Field Guide →</a></div>
+  </div>
+</div>
+
+<!-- FIELD GUIDE -->
+<div class="view page" data-view="breeds" hidden>
+  <div class="wrap">
+    <div class="head">
+      <p class="mono">p. 2 · Field Guide</p>
+      <h2>Thirteen chickens. <em>One species.</em></h2>
+      <p class="lede">Thousands of years of breeding turned one shy forest bird into hundreds of breeds. Here are some of the most distinctive, sketched as hens and as roosters.</p>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Show" id="breedSex">
+        <button type="button" data-sex="hen" aria-pressed="true">Hens</button>
+        <button type="button" data-sex="rooster" aria-pressed="false">Roosters</button>
+      </div>
+    </div>
+    <div class="gridcards" id="breedGrid"></div>
+
+
+    <div class="sub">
+      <p class="mono">Feathers · structure</p>
+      <h3>Feather types</h3>
+      <p>Chickens don't have hair, but some breeds come close. Small changes to a feather's structure make it smooth, fluffy, fur-like or curled.</p>
+    </div>
+    <div class="feathers" id="featherTypes"></div>
+
+
+    <div class="sub">
+      <p class="mono">Feathers · color</p>
+      <h3>Feather patterns</h3>
+      <p>Pigment is laid down in bands as each feather grows, so one feather can carry stripes, edges or spots.</p>
+    </div>
+    <div class="feathers" id="featherPatterns"></div>
+    <div class="nextpage"><span class="mono">Next page</span><a href="#timeline">Timeline →</a></div>
+  </div>
+</div>
+
+<!-- TIMELINE -->
+<div class="view page" data-view="timeline" hidden>
+  <div class="wrap">
+    <div class="head">
+      <p class="mono">p. 3 · Timeline</p>
+      <h2>The egg came first. <em>By 300 million years.</em></h2>
+      <p class="lede">From the first shelled egg to the most common bird on the planet. Scroll sideways through deep time.</p>
+    </div>
+    <div class="rail">
+      <span class="mono" id="railLabel">312 Mya</span>
+      <div class="bar"><i id="railFill"></i></div>
+      <button class="rbtn" type="button" id="prevEv" aria-label="Previous event">←</button>
+      <button class="rbtn" type="button" id="nextEv" aria-label="Next event">→</button>
+    </div>
+    <div class="track" id="track" tabindex="0" aria-label="Evolution timeline"></div>
+
+    <div class="sub"><p class="mono">A day in the life</p><h3>Sunrise to roost</h3></div>
+    <div class="day">
+      <svg class="dial" id="dial" viewBox="0 0 360 360" role="img" aria-label="24-hour clock of a chicken's day"></svg>
+      <div class="daycard">
+        <div class="now" aria-live="polite"><p class="mono" id="nowTime">05:30</p><h4 id="nowTitle"></h4><p id="nowText"></p></div>
+        <div class="range">
+          <button class="rbtn" type="button" id="play" aria-label="Play the day">▶</button>
+          <label for="hour" class="sr">Time of day</label>
+          <input id="hour" type="range" min="0" max="23.75" step="0.25" value="5">
+        </div>
+        <ul class="daylist" id="daylist"></ul>
+      </div>
+    </div>
+    <div class="nextpage"><span class="mono">Next page</span><a href="#intelligence">Intelligence →</a></div>
+  </div>
+</div>
+
+<!-- INTELLIGENCE -->
+<div class="view page" data-view="intelligence" hidden>
+  <div class="wrap">
+    <div class="head">
+      <p class="mono">p. 4 · Intelligence</p>
+      <h2>The Pecking Order Exam. <em>Written by hens.</em></h2>
+      <p class="lede">Eight questions chickens answer every day. Each one is based on a real experiment. Let's see where you'd rank in the flock.</p>
+    </div>
+    <div class="quiz">
+      <div class="examcover">
+        <div style="display:grid;gap:12px">
+          <p class="mono" id="qnum">Question 1 of 8</p>
+          <h3 id="qtitle">Sky or ground?</h3>
+          <p>Proctored by the head hen. No pecking at your neighbor's answers.</p>
+        </div>
+        <div style="display:grid;gap:10px"><p class="mono">Your eggs</p><div class="score" id="score"></div></div>
+      </div>
+      <div class="qcard" id="qcard"></div>
+    </div>
+    <div class="nextpage"><span class="mono">Next page</span><a href="#relationships">Relationships →</a></div>
+  </div>
+</div>
+
+<!-- RELATIONSHIPS -->
+<div class="view page" data-view="relationships" hidden>
+  <div class="wrap">
+    <div class="head">
+      <p class="mono">p. 5 · Relationships</p>
+      <h2>Tangled up <em>with everything.</em></h2>
+      <p class="lede">Chickens shape soil, forests, disease and climate, and humans have shaped every part of the chicken. Tap a node to follow a thread.</p>
+    </div>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Filter relationships" id="relSeg">
+        <button type="button" data-f="all" aria-pressed="true">All</button>
+        <button type="button" data-f="env" aria-pressed="false">Environment</button>
+        <button type="button" data-f="human" aria-pressed="false">Humans</button>
+      </div>
+    </div>
+    <div class="rel">
+      <div class="web"><svg id="web" viewBox="0 0 640 560" role="img" aria-label="Relationship web"></svg></div>
+      <div class="card relcard" id="relcard" aria-live="polite"></div>
+    </div>
+    <div class="nextpage"><span class="mono">Back to</span><a href="#home">Contents →</a></div>
+  </div>
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="mono">Gallus Lab · organism research project</p>
+    <p class="mono">Sketches are schematic, not to exact scale</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+const $ = s => document.querySelector(s);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const INK='#2a2926', RED='#b5412e', PAPER='#f4f2e9';
+let UID=0;
+function rng(seed){ seed=(seed%2147483646)+1; return () => (seed = seed*16807 % 2147483647) / 2147483647; }
+
+/* ---------- sketch layer compositor ---------- */
+function layer(o){
+  return (o.defs?`<defs>${o.defs}</defs>`:'')+(o.base?`<g fill="#f4f2e9">${o.base}</g>`:'')+
+    (o.wash?`<g filter="url(#wash)" transform="translate(2 1.5)">${o.wash}</g>`:'')+
+    (o.hatch?`<g class="hatchg" filter="url(#rough1)">${o.hatch}</g>`:'')+
+    (o.fuzz?`<g class="ink" filter="url(#fuzz)">${o.fuzz}</g>`:'')+
+    (o.ink?`<g class="ink" filter="url(#rough1)">${o.ink}</g><g class="ink ink2" filter="url(#rough2)" transform="translate(.6 .5)">${o.ink}</g>`:'')+
+    (o.fine?`<g class="fine" filter="url(#rough1)">${o.fine}</g>`:'')+(o.top||'');
+}
+const W=(d,c,x='')=>`<path d="${d}" fill="${c}" ${x}/>`;
+const P=(d,x='')=>`<path d="${d}" ${x}/>`;
+const scale=(px,label)=>`<g class="ink" filter="url(#rough1)"><path d="M28 494 H${28+px} M28 489 V499 M${28+px} 489 V499"/></g><text class="label" x="${36+px}" y="500" style="font-size:13px">${label}</text>`;
+const leg=(d,col,op=1)=>`<path d="${d}" stroke="${INK}" stroke-width="10.5" opacity="${op}"/><path d="${d}" stroke="${col}" stroke-width="7.4" opacity="${op}"/>`;
+function bone(x1,y1,x2,y2,w=6){
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1,nx=-dy/L,ny=dx/L,e=Math.min(.22,w*1.7/L),we=w*.82,ws=w*.5;
+  const p=(t,o)=>(x1+dx*t+nx*o).toFixed(1)+' '+(y1+dy*t+ny*o).toFixed(1);
+  return `<path d="M${p(0,we*.45)} C${p(0,we)} ${p(e*.45,we)} ${p(e,ws)} L${p(1-e,ws)} C${p(1-e*.45,we)} ${p(1,we)} ${p(1,we*.45)} C${p(1+e*.3,we*.3)} ${p(1+e*.3,-we*.3)} ${p(1,-we*.45)} C${p(1,-we)} ${p(1-e*.45,-we)} ${p(1-e,-ws)} L${p(e,-ws)} C${p(e*.45,-we)} ${p(0,-we)} ${p(0,-we*.45)} C${p(-e*.3,-we*.3)} ${p(-e*.3,we*.3)} ${p(0,we*.45)} Z" fill="${PAPER}" stroke-width="1.1"/>`;
+}
+function chain(p0,p1,p2,n,w,h){
+  let s='';
+  for(let i=0;i<n;i++){const t=(i+.5)/n,u=1-t;
+    const x=u*u*p0[0]+2*u*t*p1[0]+t*t*p2[0],y=u*u*p0[1]+2*u*t*p1[1]+t*t*p2[1];
+    const dx=2*u*(p1[0]-p0[0])+2*t*(p2[0]-p1[0]),dy=2*u*(p1[1]-p0[1])+2*t*(p2[1]-p1[1]);
+    s+=`<rect x="${-w/2}" y="${-h/2}" width="${w}" height="${h}" rx="2.5" fill="${PAPER}" stroke-width="1.2" transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(Math.atan2(dy,dx)*180/Math.PI).toFixed(1)})"/>`;}
+  return s;
+}
+
+/* ---------- hen / rooster ---------- */
+// Birds face right, in the convention of poultry standard plates.
+const HEN={
+  body:'M452 118 C444 150 432 176 412 196 C390 210 344 213 300 214 C272 215 250 208 234 198 L228 210 C224 240 232 268 252 292 C270 318 300 340 322 352 C332 364 340 380 348 388 C354 391 360 390 364 386 C370 376 380 370 396 372 C424 370 446 350 462 324 C486 294 494 258 488 224 C484 196 478 166 478 140 C478 132 476 126 472 122 Z',
+  roo:'M452 96 C444 130 432 162 410 186 C388 204 344 210 300 212 C272 213 252 205 238 192 L232 204 C226 238 236 270 256 294 C276 320 306 344 330 356 C338 370 348 388 356 396 C362 399 368 398 372 394 C378 384 388 378 404 378 C432 374 452 354 470 324 C494 292 500 250 492 210 C486 180 480 146 480 118 C480 108 478 102 474 98 Z',
+  wing:'M446 238 C414 222 354 226 304 246 C280 256 262 272 250 294 C282 304 336 306 384 298 C414 292 438 276 448 256 Z',
+  belly:'M252 292 C270 318 306 346 348 364 C390 378 436 356 462 324 C432 344 392 352 350 346 C308 338 276 318 252 292 Z',
+  under:'M250 294 C282 304 336 306 384 298 C414 292 438 276 448 256 C446 280 420 300 384 308 C336 316 286 312 250 294 Z',
+  thigh:'M316 326 C308 350 320 378 342 388 C352 392 366 390 376 382 C388 370 392 350 386 330 C366 340 334 338 316 326 Z',
+  thighEdge:'M316 326 C308 350 320 378 342 388 C352 392 366 390 376 382 C388 370 392 350 386 330',
+  hackle:'M452 118 C444 150 430 178 406 200 C420 214 440 222 462 226 C474 228 484 224 488 214 C484 190 478 160 476 134 Z',
+  rhackle:'M452 96 C442 132 428 166 398 198 L412 206 L414 214 L426 214 L430 226 L442 222 L448 234 L458 226 L466 236 L472 224 L484 228 L490 212 C486 180 480 140 478 112 Z',
+  saddle:'M336 212 C300 212 268 204 242 192 L238 200 C248 222 258 246 266 266 L274 252 L282 268 L288 250 L296 264 L302 246 L312 256 L316 238 L326 244 C330 230 334 220 336 212 Z',
+  head:'M452 116 C450 98 462 84 480 84 C494 85 502 94 503 104 C504 114 498 124 488 128 C474 132 458 128 452 116 Z',
+  face:'M490 95 C499 98 503 106 501 114 C495 119 486 119 479 115 C477 108 481 99 490 95 Z',
+  upper:'M501 98 C512 99 522 105 527 116 C518 113 509 112 502 112 Z',
+  lower:'M502 113 C510 114 517 116 521 119 C513 122 506 122 501 119 Z',
+  wattle:'M498 124 C493 138 496 152 503 155 C511 156 514 143 510 124 Z',
+  sick:['M244 196 C220 120 150 70 90 90 C60 100 50 140 58 190 C62 200 70 198 70 188 C66 150 74 118 96 108 C146 92 204 130 232 204 Z',
+        'M240 205 C205 145 150 120 110 140 C85 152 80 190 92 235 C96 244 104 240 102 230 C94 196 100 166 118 156 C152 140 196 170 228 214 Z'],
+  lesser:['M236 214 C200 180 160 180 140 205 C128 222 132 250 145 272 C150 278 156 274 152 266 C142 246 142 226 152 214 C168 196 200 204 226 226 Z',
+          'M234 226 C210 214 186 220 178 240 C172 256 178 276 190 290 L196 284 C186 270 184 254 190 242 C200 228 218 230 230 240 Z'],
+  silkTail:'M244 214 C214 180 176 190 172 220 C170 246 204 258 236 250 Z'
+};
+const COMBS={
+  single:{d:'M500 101 C498 95 500 90 503 87 L494 90 L495 76 L488 88 L485 70 L479 87 L474 69 L470 87 L463 73 L462 89 L452 82 C455 90 458 95 462 97 C476 95 490 97 500 101 Z'},
+  rose:{d:'M498 100 C496 90 486 86 476 87 C466 88 456 90 446 86 L430 81 C440 90 448 96 458 98 C472 99 486 99 498 100 Z',dots:[[492,91],[484,89],[476,90],[468,91],[460,92],[488,95],[478,95],[468,96]]},
+  pea:{d:'M498 101 C496 92 488 87 478 88 C470 89 464 93 462 98 C474 96 486 98 498 101 Z',lines:'M494 96 C488 91 478 90 468 94 M492 99 C486 95 478 94 466 97'},
+  cushion:{d:'M497 100 C495 93 488 90 481 91 C473 92 469 96 469 99 C479 97 489 98 497 100 Z'},
+  buttercup:{d:'M500 101 L503 86 L496 93 L494 78 L488 90 L482 74 L478 89 L471 75 L469 90 L461 79 L462 94 L454 88 C456 95 460 98 464 99 C478 97 490 98 500 101 Z',lines:'M496 95 C484 91 472 92 462 96'},
+  strawberry:{d:'M500 101 C500 92 494 87 487 88 C480 89 476 95 476 100 C484 98 492 99 500 101 Z',dots:[[491,92],[485,93],[495,96],[488,97],[481,97]]},
+  walnut:{d:'M499 101 C499 92 491 86 483 88 C475 89 468 94 468 100 C478 97 490 98 499 101 Z',lines:'M494 94 C488 92 482 95 476 93 M492 98 C486 96 480 98 474 97'},
+  v:{v:true}
+};
+const darken=(hex,k=.72)=>{const n=parseInt(hex.slice(1),16);return'#'+[16,8,0].map(s=>Math.round(((n>>s)&255)*k).toString(16).padStart(2,'0')).join('');};
+function combMarkup(type,col,big){
+  const C=COMBS[type]||COMBS.single,tr=big?'transform="translate(484 92) scale(1.5) translate(-484 -92)"':'';
+  if(C.v)return{wash:'',ink:`<g ${tr}><path d="M494 99 C491 90 493 83 500 78 C499 87 498 93 497 99 Z" fill="${col}"/><path d="M487 99 C482 90 482 83 486 77 C488 85 489 92 490 99 Z" fill="${col}"/></g>`,fine:''};
+  let fine='';if(C.dots)fine+=C.dots.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="1.4"/>`).join('');if(C.lines)fine+=P(C.lines);
+  if(type==='single'||type==='buttercup')fine+=P('M495 92 C484 90 472 90 462 93','opacity=".6"');
+  return{wash:`<g ${tr}>${W(C.d,col)}${W(C.d,darken(col,.78),'opacity=".55" transform="translate(0 4) scale(1 .96)"')}</g>`,ink:`<g ${tr}>${P(C.d,'stroke-width="1.2"')}</g>`,fine:`<g ${tr}>${fine}</g>`};
+}
+// overlapping-feather texture: small arcs whose tips point back and down
+function marks(kind,r,clip,box,step=[11,9]){
+  let s='';const[x0,y0,x1,y1]=box;
+  for(let y=y0;y<y1;y+=step[1])for(let x=x0;x<x1;x+=step[0]){
+    if(r()<.28)continue;
+    const jx=+(x+(r()-.5)*4+((y/step[1]|0)%2?step[0]/2:0)).toFixed(1),jy=+(y+(r()-.5)*3).toFixed(1),k=.8+r()*.5;
+    s+=kind==='frizzle'?`<path d="M${jx} ${jy} c${2*k} ${-5*k} ${7*k} ${-6*k} ${9*k} ${-2*k}"/>`:
+       kind==='silkie'?`<path d="M${jx} ${jy} q${-3*k} ${2*k} ${-6*k} 0 t${-6*k} 0"/>`:
+       `<path d="M${jx} ${jy} c${-3.4*k} ${1.6*k} ${-3.6*k} ${6*k} ${-.4*k} ${8.4*k}"/>`;
+  }
+  return`<g clip-path="url(#${clip})">${s}</g>`;
+}
+function strands(clip,from,to,n,r,w=.8){
+  let s='';for(let i=0;i<n;i++){const t=i/(n-1),sx=from[0][0]+(from[1][0]-from[0][0])*t,sy=from[0][1]+(from[1][1]-from[0][1])*t,ex=to[0][0]+(to[1][0]-to[0][0])*t+(r()-.5)*6,ey=to[0][1]+(to[1][1]-to[0][1])*t+(r()-.5)*6;
+    s+=`<path d="M${sx.toFixed(1)} ${sy.toFixed(1)} Q${((sx+ex)/2+8).toFixed(1)} ${((sy+ey)/2).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)}" stroke-width="${w}"/>`;}
+  return`<g clip-path="url(#${clip})">${s}</g>`;
+}
+function tailFan(bx,by,angles,lens,w,col,r){
+  let wash='',ink='',fine='';
+  angles.forEach((deg,i)=>{const a=deg*Math.PI/180,dx=Math.cos(a),dy=Math.sin(a),nx=-dy,ny=dx,len=lens[i%lens.length];
+    const p=(t,s)=>[(bx+dx*t+nx*s).toFixed(1),(by+dy*t+ny*s).toFixed(1)].join(' ');
+    const d=`M${p(0,w*.3)} L${p(len-w*.5,w*.5)} Q${p(len+w*.4,0)} ${p(len-w*.5,-w*.5)} L${p(0,-w*.3)} Z`;
+    wash+=W(d,i%2?col:darken(col,.9));ink+=P(d,'stroke-width="1.1"');
+    fine+=P(`M${p(6,0)} L${p(len-4,w*.04)}`,'stroke-width=".9"');
+    for(let t=len*.3;t<len-6;t+=7+r()*3)fine+=P(`M${p(t,1)} L${p(t+7,w*.42)}`,'stroke-width=".55"');
+  });
+  return{wash,ink,fine};
+}
+// samples a path in the hidden defs svg so feathers and down can follow any outline
+const SVGNS='http://www.w3.org/2000/svg',_ms=document.querySelector('svg[aria-hidden="true"]');
+function samplePath(d,n){
+  const el=document.createElementNS(SVGNS,'path');el.setAttribute('d',d);_ms.appendChild(el);
+  const L=el.getTotalLength(),pts=[];
+  for(let i=0;i<n;i++){const s=L*i/n,p=el.getPointAtLength(s),q=el.getPointAtLength((s+1)%L);const tl=Math.hypot(q.x-p.x,q.y-p.y)||1;pts.push([p.x,p.y,(q.x-p.x)/tl,(q.y-p.y)/tl]);}
+  el.remove();
+  let a=0;pts.forEach((p,i)=>{const q=pts[(i+1)%pts.length];a+=p[0]*q[1]-q[0]*p[1];});
+  const sg=a<0?1:-1;return pts.map(p=>[p[0],p[1],-p[3]*sg,p[2]*sg]);
+}
+// short strokes that break up an outline into down or soft feathers; range limits it to part of the outline
+function fuzzEdge(d,n,r,len=[3,6],range=[0,1],sw=.7){
+  const pts=samplePath(d,n);let s='';
+  pts.forEach((p,i)=>{const t=i/n;if(t<range[0]||t>range[1])return;
+    const l=len[0]+r()*(len[1]-len[0]),a=Math.atan2(p[3],p[2])+(r()-.5)*.7,x=p[0]-p[2]*1.5,y=p[1]-p[3]*1.5;
+    s+=`<path d="M${f2(x)} ${f2(y)} q${f2(Math.cos(a)*l*.5+(r()-.5)*2)} ${f2(Math.sin(a)*l*.5+(r()-.5)*2)} ${f2(Math.cos(a)*l)} ${f2(Math.sin(a)*l)}" stroke-width="${sw}"/>`;});
+  return s;
+}
+// leg: the top of the shank starts inside the body and is covered by the thigh feathers drawn over it
+function rleg(hx,hy,fx,fy,col,o={}){
+  const k=o.k||1,dx=fx-hx,dy=fy-hy,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L,nx=-uy,ny=ux,w1=6.4*k,w2=4.1*k,f=v=>v.toFixed(1);
+  const pt=(t,s)=>[hx+dx*t+nx*s,hy+dy*t+ny*s],q=(t,s)=>{const p=pt(t,s);return f(p[0])+' '+f(p[1]);};
+  // back edge swells at the hock joint, front edge runs straight
+  let ink=`<path d="M${q(0,w1)} L${q(.2,w1*1.12)} C${q(.3,w1*.95)} ${q(.6,w2*1.05)} ${q(1,w2)} L${q(1,-w2)} C${q(.7,-w2)} ${q(.35,-w1*.85)} ${q(.22,-w1*1.05)} L${q(0,-w1)} Z" fill="${col}" stroke-width="1.15"/>`;
+  ink+=`<path d="M${q(.04,-w1*.4)} L${q(.96,-w2*.4)}" stroke="#fff" stroke-width="${f(1.4*k)}" opacity=".35"/>`;
+  let sc='';for(let t=.24;t<.97;t+=.062){const w=w1+(w2-w1)*t;sc+=`M${q(t,w)} Q${f(hx+dx*t+ux*2*k)} ${f(hy+dy*t+uy*2*k)} ${q(t,-w)} `;}
+  ink+=P(sc,'stroke-width=".55" opacity=".75"');
+  const toes=[[[16,4],[32,8],[47,10]],[[12,8],[24,14],[34,19]],[[12,1],[24,2],[35,2]],[[-9,3],[-17,6]]];
+  if(o.five)toes.push([[-7,-2],[-15,-3]]);
+  toes.forEach((t,ti)=>{const pts=[[fx,fy]].concat(t.map(v=>[fx+v[0]*k,fy+v[1]*k])),d='M'+pts.map(v=>f(v[0])+' '+f(v[1])).join(' L');
+    ink+=`<path d="${d}" stroke="${INK}" stroke-width="${f(7.2*k)}"/><path d="${d}" stroke="${col}" stroke-width="${f(5*k)}"/>`;
+    const e=pts[pts.length-1],b=pts[pts.length-2],vx=e[0]-b[0],vy=e[1]-b[1],vl=Math.hypot(vx,vy);
+    ink+=`<path d="M${f(e[0])} ${f(e[1]-1.4*k)} q${f(vx/vl*5*k)} ${f(vy/vl*5*k)} ${f(vx/vl*7*k)} ${f(vy/vl*7*k+3*k)}" stroke="${INK}" stroke-width="${f(2*k)}"/>`;
+    pts.slice(1,-1).forEach(v=>ink+=`<path d="M${f(v[0])} ${f(v[1]-2.5*k)} l0 ${f(5*k)}" stroke-width=".6"/>`);
+  });
+  if(o.spur){const p=pt(.62,-w2*1.1),x=p[0],y=p[1];ink+=`<path d="M${f(x+1)} ${f(y-3.5)} C${f(x-8)} ${f(y-3)} ${f(x-14)} ${f(y-2)} ${f(x-18)} ${f(y-5)} C${f(x-14)} ${f(y+1)} ${f(x-8)} ${f(y+3)} ${f(x+1)} ${f(y+3.5)} Z" fill="${col}" stroke-width="1.1"/>`;}
+  let wash='',fine='';
+  if(o.feathered){const a=pt(.1,-w1*1.4),b2=pt(.85,-w2*3.2),c2=pt(1,-w2*1.2);
+    const fd=`M${q(.08,w1)} L${f(a[0])} ${f(a[1])} C${f(a[0]-8)} ${f(a[1]+30)} ${f(b2[0]-6)} ${f(b2[1])} ${f(fx-16)} ${f(fy+3)} L${f(fx+6)} ${f(fy+3)} L${f(fx+20)} ${f(fy+11)} L${f(fx+30)} ${f(fy+9)} L${f(c2[0])} ${f(c2[1]-6)} Z`;
+    wash=W(fd,o.fcol);ink+=P(fd,'stroke-width=".9"');for(let t=.15;t<1;t+=.1){const p=pt(t,-w1);fine+=P(`M${f(p[0])} ${f(p[1])} q-6 2 -11 ${f(7+t*4)}`);}}
+  return{ink,wash,fine};
+}
+function drawHen(b,sex){
+  const u=++UID,roo=sex==='rooster',f=new Set(b.feat||[]),r=rng(b.seed||u);
+  const c=Object.assign({},b.hen,roo&&b.roo?b.roo:{});
+  const body=c.body,hack=c.hackle||body,wing=c.wing||body,band=c.band||wing,tail=c.tail||body;
+  const silk=f.has('silkie'),friz=f.has('frizzle'),soft=silk||friz;
+  const comb=b.comb||'single',combCol=b.combCol||'#c63f2e',legCol=b.legs||'#d9a33a';
+  const BODY=roo?HEN.roo:HEN.body,HK=roo?HEN.rhackle:HEN.hackle;
+  const L=roo?{n:[362,376,354,466],f:[395,366,402,460]}:{n:[355,368,350,456],f:[388,358,396,450]};
+  const legOpt={spur:roo,five:f.has('fivetoe'),feathered:f.has('feathered'),fcol:c.feet||body};
+  // back layer: far leg + tail
+  const back={wash:'',ink:'',fine:'',fuzz:''};
+  const lf=rleg(...L.f,darken(legCol,.85),legOpt);back.ink+=`<g opacity=".85">${lf.ink}</g>`;back.wash+=lf.wash;back.fine+=lf.fine;
+  if(silk){back.wash+=W(HEN.silkTail,tail);back.fuzz+=P(HEN.silkTail);back.fine+=marks('silkie',r,`ct${u}`,[170,180,250,260],[9,8]);}
+  else{
+    if(roo){HEN.lesser.forEach(d=>{back.wash+=W(d,darken(c.sickle||tail,.9));back.ink+=P(d,'stroke-width="1.1"');});}
+    const fan=roo?tailFan(240,200,[203,210,217,224,231],[112,118,122,116,108],20,tail,r):tailFan(238,202,[198,205,212,219,226,233],[118,128,136,138,132,122],21,tail,r);
+    back.wash+=fan.wash;back.ink+=fan.ink;back.fine+=fan.fine;
+    if(roo){HEN.sick.forEach(d=>{back.wash+=W(d,c.sickle||tail);back.ink+=P(d,'stroke-width="1.2"');});
+      back.fine+=P('M238 200 C214 128 150 84 94 100 M234 210 C202 156 150 134 112 148 M230 222 C200 194 162 196 146 212','stroke-width=".8"');}
+  }
+  back.defs=`<clipPath id="ct${u}"><path d="${HEN.silkTail}"/></clipPath>`;
+  // body layer
+  const mid={base:P(BODY),wash:'',ink:'',fine:'',fuzz:'',hatch:'',defs:`<clipPath id="cb${u}"><path d="${BODY}"/></clipPath><clipPath id="ch${u}"><path d="${HK}"/></clipPath>`};
+  mid.wash+=W(BODY,body)+W(HEN.belly,darken(body,.7),'opacity=".55"');
+  const hk={base:P(f.has('nakedneck')?HEN.hackle:HK)+(roo&&!silk?P(HEN.saddle):''),wash:'',ink:'',fine:'',defs:''};
+  if(f.has('nakedneck'))hk.wash+=W(HEN.hackle,'#c9655a');else hk.wash+=W(HK,hack);
+  if(roo&&!silk)hk.wash+=W(HEN.saddle,c.saddle||hack);
+  if(b.pattern==='barred')hk.hatch=`<g clip-path="url(#ch${u})"><rect x="380" y="90" width="130" height="160" fill="url(#bars)"/></g>`;
+  if(b.pattern==='barred')mid.hatch+=`<g clip-path="url(#cb${u})"><rect x="200" y="80" width="320" height="320" fill="url(#bars)"/></g>`;
+  mid.hatch+=`<g clip-path="url(#cb${u})">${W(HEN.belly,'url(#hatch)','opacity=".55"')}</g>`;
+  (soft?(s=>mid.fuzz+=s):(s=>mid.ink+=s))(P(BODY,'stroke-width="1.5"'));
+  mid.fine+=marks(friz?'frizzle':silk?'silkie':'n',r,`cb${u}`,[240,150,500,372]);
+  if(f.has('nakedneck')){hk.ink+=P(HEN.hackle,'stroke-width="1.3"');hk.fine+=P('M462 150 q8 4 16 0 M458 172 q10 4 22 -1 M450 194 q12 5 26 -2')+P('M484 214 l6 10 M480 218 l2 12 M476 220 l-3 10','stroke-width="1"');}
+  else{hk.wash+='';hk.fine+=strands(`ch${u}`,[[452,118],[478,128]],[[400,206],[488,226]],22,r,b.stripe?1.8:.8);
+    hk.ink+=P(HK,'stroke-width="1.4"');}
+  if(roo&&!silk){hk.ink+=P(HEN.saddle,'stroke-width="1"');hk.fine+=`<g clip-path="url(#cs${u})">${Array.from({length:16},(_,i)=>{const x=330-i*6;return`<path d="M${x} ${212-i*.8} Q${x-6} ${236} ${x-10+(r()-.5)*4} ${258+(r()-.5)*8}"/>`;}).join('')}</g>`;hk.defs+=`<clipPath id="cs${u}"><path d="${HEN.saddle}"/></clipPath>`;}
+  // wing layer
+  // wing: overlapping feather groups, front to back: primaries, secondaries (rear ones on top), greater coverts, wing bow
+  const wclip=`<clipPath id="cw${u}"><path d="M446 238 C414 222 354 226 304 246 C280 256 262 272 246 296 L250 314 L462 314 L462 236 Z"/></clipPath>`;
+  const fs=(b,t,w,col)=>{const dx=t[0]-b[0],dy=t[1]-b[1],Lf=Math.hypot(dx,dy),nx=-dy/Lf,ny=dx/Lf,p=(k,o)=>f2(b[0]+dx*k+nx*o)+' '+f2(b[1]+dy*k+ny*o);
+    return`<path d="M${p(0,w*.32)} C${p(.4,w*.5)} ${p(.75,w*.52)} ${p(.9,w*.42)} Q${p(1.07,0)} ${p(.9,-w*.42)} C${p(.75,-w*.52)} ${p(.4,-w*.5)} ${p(0,-w*.32)} Z" fill="${col}" stroke-width=".95"/><path d="M${p(.05,w*.02)} L${p(.92,w*.05)}" stroke-width=".5" opacity=".65"/>`;};
+  const sc=(x,y,w,h,col)=>`<path d="M${f2(x-w)} ${f2(y-40)} L${f2(x-w)} ${f2(y)} Q${f2(x-w*.2)} ${f2(y+h*.9)} ${f2(x+w)} ${f2(y+h*.15)} L${f2(x+w)} ${f2(y-40)} Z" fill="${col}" stroke="none"/><path d="M${f2(x-w)} ${f2(y-h*.35)} L${f2(x-w)} ${f2(y)} Q${f2(x-w*.2)} ${f2(y+h*.9)} ${f2(x+w)} ${f2(y+h*.15)}" stroke-width=".85"/>`;
+  let wfe='';
+  for(let i=0;i<5;i++)wfe+=fs([394-i*4,277+i*2],[252+i*9,291+i*2.2],13,darken(band,1-i*.04));
+  for(let i=6;i>=0;i--){wfe+=fs([306+i*20,260-i*1.6],[287+i*20,304-i*2.2],26,darken(wing,i%2?.84:.9));
+    for(let k=.35;k<.85;k+=.12){const bx=306+i*20,by=260-i*1.6,tx=287+i*20,ty=304-i*2.2;wfe+=P(`M${f2(bx+(tx-bx)*k)} ${f2(by+(ty-by)*k)} l-6 3`,'stroke-width=".45" opacity=".5"');}}
+  for(let i=8;i>=0;i--)wfe+=sc(306+i*16,272-i*1.7,8.5,12,darken(wing,i%2?.97:1));
+  for(let row=0;row<2;row++)for(let i=7;i>=0;i--){const x=362+i*11+row*5,y=258-row*8-i*1.5;if(x<446)wfe+=sc(x,y,5.5,7,darken(wing,1-row*.03));}
+  const wl={hatch:W(HEN.under,'url(#hatch)','opacity=".6"'),wash:W(HEN.wing,wing)};
+  const wingSvg=`<defs>${wclip}</defs>`+layer(wl)+`<g class="ink" filter="url(#rough1)" clip-path="url(#cw${u})">${wfe}</g>`+layer({ink:P('M446 238 C414 222 354 226 304 246 C280 256 262 272 250 294','stroke-width="1.3"')});
+  // head layer
+  const head={wash:'',ink:'',fine:'',fuzz:'',top:''};
+  const hc=f.has('nakedneck')?'#c9655a':hack;
+  head.wash+=W(HEN.head,hc);head.ink+=P(HEN.head,'stroke-width="1.3"');
+  if(!f.has('crest')&&!f.has('muffs'))head.wash+=W(HEN.face,silk?'#4a3e48':'#cf5a48','opacity=".7"');
+  head.fine+=P('M456 112 C462 104 470 100 478 98 M458 122 C466 118 474 118 480 120','stroke-width=".5" opacity=".6"');
+  head.defs=`<clipPath id="chd${u}"><path d="${HEN.head}"/></clipPath>`;
+  const cm=combMarkup(comb,combCol,roo&&!f.has('crest'));head.wash+=cm.wash;head.ink+=cm.ink;head.fine+=cm.fine;
+  if(!f.has('muffs')){const tr=roo?'transform="translate(504 124) scale(1.3 1.7) translate(-504 -124)"':'';head.wash+=`<g ${tr}>${W(HEN.wattle,combCol)}${W(HEN.wattle,darken(combCol,.75),'opacity=".5" transform="translate(2 3)"')}</g>`;head.ink+=`<g ${tr}>${P(HEN.wattle,'stroke-width="1.1"')}</g>`;}
+  else{head.wash+=`<ellipse cx="470" cy="126" rx="18" ry="13" fill="${hack}"/><ellipse cx="503" cy="134" rx="13" ry="11" fill="${hack}"/>`;head.fuzz+=`<ellipse cx="470" cy="126" rx="18" ry="13"/><ellipse cx="503" cy="134" rx="13" ry="11"/>`;head.fine+=P('M478 118 l10 4 M474 130 l12 2 M462 132 l2 8 M500 128 l0 12 M506 128 l3 10 M496 130 l-3 9');}
+  head.wash+=`<ellipse cx="466" cy="116" rx="4.6" ry="6" fill="${b.lobe||'#c9473a'}"/>`;head.ink+=`<ellipse cx="466" cy="116" rx="4.6" ry="6" stroke-width=".9"/>`;
+  const bk=silk?'#6a6563':'#d6a547';head.wash+=W(HEN.upper,bk)+W(HEN.lower,darken(bk,.85));head.ink+=P(HEN.upper,'stroke-width="1.1"')+P(HEN.lower,'stroke-width="1"');head.fine+=P('M505 104 q3 -1 5 1','stroke-width="1"');
+  if(f.has('crest')){const cc=b.crest||hack,rx=silk?32:38,ry=silk?24:30;head.wash+=`<ellipse cx="470" cy="84" rx="${rx}" ry="${ry}" fill="${cc}"/>`;head.fuzz+=`<ellipse cx="470" cy="84" rx="${rx}" ry="${ry}"/>`;
+    let cs='';for(let i=0;i<30;i++){const a=(-200+i*7.5)*Math.PI/180,l=24+r()*12;cs+=`<path d="M486 96 q${f2(Math.cos(a)*l*.5-6)} ${f2(Math.sin(a)*l*.6-4)} ${f2(Math.cos(a)*l-8)} ${f2(Math.sin(a)*l)}"/>`;}head.fine+=cs;}
+  head.top+=`<circle cx="484" cy="104" r="4.6" fill="${silk?'#3b2f2a':'#c8792a'}"/><circle cx="484.4" cy="104" r="2.4" fill="${INK}"/><circle cx="484" cy="104" r="5.4" fill="none" stroke="${INK}" stroke-width=".8"/>`;
+  const H=roo?`<g transform="translate(0 -24)">${layer(head)}</g>`:layer(head);
+  // front leg
+  const ln=rleg(...L.n,legCol,legOpt);
+  const sz=b.size||1,T=sz!==1?`transform="translate(330 470) scale(${sz}) translate(-330 -470)"`:'';
+  return`<g ${T}><path d="M230 478 C300 486 420 486 470 476" fill="none" stroke="${INK}" stroke-width=".9" opacity=".35"/><g opacity=".9">${layer(back)}</g>${layer({ink:ln.ink,wash:ln.wash,fine:ln.fine})}${layer(mid)}${layer(hk)}${wingSvg}${H}</g>`;
+}
+const f2=v=>v.toFixed(1);
+
+/* ---------- egg / embryo / chick drawings ---------- */
+const EGG='M300 70 C392 70 452 210 452 300 C452 392 388 452 300 452 C212 452 148 392 148 300 C148 210 208 70 300 70 Z';
+const EGGIN='transform="translate(300 261) scale(.955) translate(-300 -261)"';
+const EGGSHADE='M452 300 C452 392 388 452 300 452 C350 430 412 380 420 300 C425 230 404 150 362 100 C420 140 452 220 452 300 Z';
+function eggOuter(){
+  const r=rng(11),lid='loupe'+(++UID);let sp='';
+  for(let i=0;i<130;i++){const x=170+r()*260,y=95+r()*340;if(((x-300)/138)**2+((y-275)/172)**2<1)sp+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(0.7+r()*1.6).toFixed(1)}" fill="#7a5532" opacity="${(.25+r()*.4).toFixed(2)}"/>`;}
+  const r2=rng(5);let pores='';
+  for(let y=148;y<240;y+=10)for(let x=462;x<552;x+=10)pores+=`<circle cx="${(x+r2()*5).toFixed(1)}" cy="${(y+r2()*5).toFixed(1)}" r="${(1.3+r2()*1.5).toFixed(1)}" fill="${INK}" opacity=".7"/>`;
+  return layer({defs:`<clipPath id="${lid}"><circle cx="505" cy="190" r="46"/></clipPath>`,
+    wash:W(EGG,'#d9b48a')+`<circle cx="505" cy="190" r="46" fill="#dcbb93"/>`,
+    hatch:W(EGGSHADE,'url(#hatch)','opacity=".75"')+`<ellipse cx="300" cy="462" rx="120" ry="9" fill="url(#hatch)" opacity=".6"/>`,
+    ink:P(EGG)+`<circle cx="505" cy="190" r="46" stroke-width="2.6"/>`+P('M438 218 L466 202'),
+    fine:P('M232 150 C250 118 280 104 300 104',`stroke-width="3" opacity=".6" stroke="#fff"`),
+    top:sp+`<g clip-path="url(#${lid})">${pores}</g><text class="label" x="488" y="262">×40</text>`})+scale(67,'1 cm');
+}
+function eggInner(){
+  let rings='';for(let i=1;i<6;i++)rings+=`<circle cx="300" cy="285" r="${70-i*11}"/>`;
+  return layer({
+    wash:W(EGG,'#e4c8a0')+W(EGG,'#dde6e1',EGGIN)+`<ellipse cx="300" cy="285" rx="112" ry="138" fill="#c4d6cd"/>`+W('M214 418 C250 396 350 396 386 418 C362 438 334 444 300 444 C266 444 238 438 214 418 Z','#f7f6f0')+`<circle cx="300" cy="285" r="70" fill="#efb03a"/><ellipse cx="300" cy="217" rx="11" ry="4" fill="#fff"/>`,
+    ink:P(EGG)+P(EGG,`${EGGIN} stroke-dasharray="4 4" stroke-width="1.2"`)+P('M214 418 C250 396 350 396 386 418')+`<ellipse cx="300" cy="285" rx="112" ry="138" stroke-width="1.1"/><circle cx="300" cy="285" r="70"/><ellipse cx="300" cy="217" rx="11" ry="4" stroke-width="1"/>`+
+      P('M296 215 C288 200 304 186 296 172 C288 158 304 146 296 132 M304 215 C296 200 312 186 304 172 C296 158 312 146 304 134')+P('M296 355 C304 370 288 384 296 398 C304 410 290 418 296 426 M304 355 C312 370 296 384 304 398 C312 410 298 418 304 426'),
+    fine:`<g stroke="#9a5d0a">${rings}</g>`+P('M300 285 C296 262 304 242 300 222','stroke="#fff" stroke-width="4" opacity=".8"')})+scale(67,'1 cm');
+}
+function embryoOuter(){
+  const r=rng(21),eid='egc'+(++UID);let v='';
+  function br(x,y,a,len,d){if(d>4||len<8)return;const x2=x+Math.cos(a)*len,y2=y+Math.sin(a)*len;v+=`<path d="M${x.toFixed(1)} ${y.toFixed(1)} Q${((x+x2)/2+(r()-.5)*10).toFixed(1)} ${((y+y2)/2+(r()-.5)*10).toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}" stroke-width="${(2.4-d*.45).toFixed(1)}"/>`;br(x2,y2,a+(r()*.7+.15),len*.72,d+1);br(x2,y2,a-(r()*.7+.15),len*.72,d+1);}
+  for(let i=0;i<7;i++)br(290,300,i*Math.PI*2/7+r()*.4,48,0);
+  return layer({defs:`<clipPath id="${eid}"><path d="${EGG}"/></clipPath>`,
+    wash:W(EGG,'#e2c39c')+`<g clip-path="url(#${eid})"><ellipse cx="300" cy="300" rx="190" ry="200" fill="url(#candle)"/></g>`+`<path d="M250 270 C268 240 320 246 334 280 C346 312 330 346 296 350 C262 352 238 322 250 270 Z" fill="#5b3a25" opacity=".75"/>`+W('M196 410 C240 384 360 384 404 410 C380 444 340 452 300 452 C260 452 220 444 196 410 Z','#f3ead8'),
+    hatch:W(EGGSHADE,'url(#hatch)','opacity=".5"'),
+    ink:P(EGG)+P('M196 410 C240 384 360 384 404 410','stroke-dasharray="5 4"'),
+    fine:`<g clip-path="url(#${eid})" stroke="${RED}" opacity=".9">${v}</g>`})+scale(67,'1 cm');
+}
+// day-14 embryo: one curled silhouette, translucent skin, eye pigment showing through, limbs folded
+const EMB={
+  body:'M262 236 C236 236 214 254 212 280 C211 294 215 305 223 312 L211 321 C220 324 229 323 236 319 C244 330 256 336 270 336 C290 338 300 352 298 370 C318 383 350 381 367 362 C385 342 387 312 373 290 C361 268 337 256 311 258 C300 246 284 236 262 236 Z',
+  wing:'M316 290 C332 286 346 296 345 312 C340 318 330 316 324 308 C320 302 317 296 316 290 Z',
+  leg:'M352 342 C346 358 326 366 302 364 L286 368 L288 361 L276 361 L280 355 L270 352 L284 350 C306 352 328 348 340 334 Z',
+  ear:'M266 286 C270 282 276 284 276 290 C272 292 268 291 266 286 Z'
+};
+function embryoInner(){
+  const r=rng(41);let dots='';
+  for(let i=0;i<60;i++){const t=i/60,x=290+t*80+(r()-.5)*6,y=262+Math.sin(t*2.6)*18+(r()-.5)*6+t*30;dots+=`<circle cx="${f2(x)}" cy="${f2(y)}" r=".9"/>`;}
+  const vessels=P('M262 248 C272 256 280 252 290 260 M228 270 C238 276 246 274 254 282 M300 300 C310 310 320 306 330 316 M330 280 C340 292 356 290 364 300','stroke-width=".7"');
+  return layer({
+    wash:W(EGG,'#e4c8a0')+W(EGG,'#efe3c2',EGGIN)+`<ellipse cx="300" cy="108" rx="36" ry="22" fill="#c9d9d1"/>`+W('M220 200 C230 160 300 140 360 160 C392 172 400 205 380 228 C350 214 320 220 300 222 C270 224 240 222 220 200 Z','#efb03a')+`<ellipse cx="292" cy="306" rx="104" ry="84" fill="#f6efdc"/>`+W('M196 410 C240 384 360 384 404 410 C380 444 340 452 300 452 C260 452 220 444 196 410 Z','#f7f6f0')+
+      W(EMB.body,'#ecb9a2')+W('M298 370 C318 383 350 381 367 362 C385 342 387 312 373 290 C380 330 360 366 298 370 Z','#c98a76','opacity=".55"')+W(EMB.wing,'#e2a690')+W(EMB.leg,'#e2a690')+`<ellipse cx="248" cy="272" rx="16" ry="15" fill="#4a3329" opacity=".85"/>`,
+    hatch:W('M300 352 C320 372 352 372 366 352 C370 340 372 326 370 314 C366 340 344 364 300 352 Z','url(#hatch)','opacity=".35"'),
+    ink:P(EGG)+P(EGG,`${EGGIN} stroke-dasharray="4 4" stroke-width="1.1"`)+`<ellipse cx="300" cy="108" rx="36" ry="22" stroke-width="1"/>`+P('M220 200 C230 160 300 140 360 160 C392 172 400 205 380 228 C350 214 320 220 300 222 C270 224 240 222 220 200 Z','stroke-width="1.1"')+`<ellipse cx="292" cy="306" rx="104" ry="84" stroke-width=".9" stroke-dasharray="6 3"/>`+P('M196 410 C240 384 360 384 404 410')+
+      P(EMB.body,'stroke-width="1.3"')+P(EMB.wing,'stroke-width=".9"')+P(EMB.leg,'stroke-width=".9"')+P(EMB.ear,'stroke-width=".7"')+
+      `<ellipse cx="248" cy="272" rx="16" ry="15" stroke-width=".8"/>`+P('M223 312 L230 309','stroke-width=".8"'),
+    fine:`<g fill="${INK}" stroke="none" opacity=".5">${dots}</g><g stroke="${RED}" opacity=".7">${vessels}</g>`+
+      `<g stroke="${RED}">${P('M392 250 C412 270 420 300 412 330 M400 300 C420 310 430 330 432 352 M200 300 C190 330 196 360 212 380 M206 330 C220 340 226 356 222 372','stroke-width=".9"')}</g>`,
+    top:`<path d="M356 350 C384 318 372 262 340 222" fill="none" stroke="${RED}" stroke-width="3.2" opacity=".85"/><path d="M356 350 C384 318 372 262 340 222" fill="none" stroke="#f4d0c4" stroke-width="1" opacity=".8"/>`})+scale(67,'1 cm');
+}
+// one continuous silhouette: crown, nape, back, tail tuft, rump, belly, breast, throat
+const CHICK={
+  sil:'M462 182 C458 156 432 140 406 144 C384 148 370 168 370 192 C370 208 364 220 350 226 C316 234 284 250 266 274 C258 276 248 274 243 282 C249 288 254 292 256 297 C250 330 270 368 312 386 C350 398 400 390 426 362 C448 336 452 298 440 268 C434 250 438 236 450 226 C460 218 468 206 466 194 Z',
+  upper:'M461 180 C471 181 480 186 485 192 C477 192 469 193 462 194 Z',
+  lower:'M462 194 C469 195 475 196 479 198 C472 200 466 200 461 198 Z',
+  wing:'M396 276 C370 264 336 268 318 290 L326 293 L323 300 L334 300 L333 306 L345 304 L349 310 L361 304 C377 304 393 296 398 286 Z',
+  belly:'M258 312 C268 356 304 384 344 388 C392 392 426 366 440 330 C424 362 388 376 346 374 C304 372 274 348 258 312 Z',
+  cheek:'M428 196 C440 204 452 206 462 200'
+};
+function chickOuter(){
+  const r=rng(31),cid='chc'+(++UID);let tex='';
+  const legA=rleg(326,356,322,438,'#e0a24a',{k:.7}),legB=rleg(366,356,372,434,'#d39446',{k:.7});
+  return `<path d="M262 452 C320 460 430 460 472 452" fill="none" stroke="${INK}" opacity=".3"/>`+
+    layer({ink:`<g opacity=".9">${legB.ink}</g>`+legA.ink})+
+    layer({defs:`<clipPath id="${cid}"><path d="${CHICK.sil}"/></clipPath>`,base:P(CHICK.sil),
+      wash:W(CHICK.sil,'#f0d06a')+W(CHICK.belly,'#d6a744','opacity=".5"')+W('M376 170 C392 148 430 146 450 168 C430 160 400 160 376 170 Z','#f7e08a','opacity=".7"')+W(CHICK.wing,'#e2b64c')+W(CHICK.upper,'#d79a52')+W(CHICK.lower,'#c48748'),
+      hatch:`<g clip-path="url(#${cid})">${W(CHICK.belly,'url(#hatch)','opacity=".4"')}</g>`,
+      ink:P(CHICK.sil,'stroke-width="1.3"')+P(CHICK.wing,'stroke-width="1"')+P(CHICK.upper,'stroke-width="1"')+P(CHICK.lower,'stroke-width=".9"'),
+      fine:P('M388 282 C366 276 342 278 326 288 M390 292 C370 288 348 290 334 296','stroke-width=".6"'),
+      top:`<circle cx="434" cy="177" r="5.2" fill="#3b2a1e"/><circle cx="434.4" cy="177" r="3" fill="${INK}"/><circle cx="435.8" cy="175.6" r=".9" fill="#fff" opacity=".8"/><path d="M481 188 l4.5 2.6 l-4 1.6 Z" fill="#f7f4ea" stroke="${INK}" stroke-width=".5"/>`})+scale(74,'2 cm');
+}
+function chickInner(){
+  return layer({
+    wash:W('M300 290 C330 300 345 340 335 380 C320 386 305 370 300 345 C296 325 294 305 300 290 Z','#d97a68')+W('M412 300 C404 330 380 350 350 354 C360 330 384 310 412 300 Z','#d97a68')+`<circle cx="330" cy="330" r="28" fill="#efb03a"/>`,
+    hatch:W('M300 290 C330 300 345 340 335 380 C320 386 305 370 300 345 C296 325 294 305 300 290 Z','url(#hatchR)'),
+    ink:`<g stroke-dasharray="2 5" opacity=".45" stroke-width="1.1">${P(CHICK.sil)}${P(CHICK.upper)}</g>`+
+      `<path d="M378 194 C373 168 390 148 414 146 C434 145 449 155 455 169 C448 182 440 196 431 206 C413 215 386 212 378 194 Z" fill="${PAPER}" stroke-width="1.3"/>`+
+      P('M392 156 C400 168 404 184 401 204 M410 148 C413 160 419 168 428 168','stroke-width=".8" stroke-dasharray="3 2.5"')+
+      `<ellipse cx="434" cy="180" rx="15.5" ry="14.5" fill="url(#hatch)" stroke-width="1.1"/><ellipse cx="434" cy="180" rx="15.5" ry="14.5" fill="${PAPER}" fill-opacity=".55" stroke="none"/>`+
+      Array.from({length:14},(_,i)=>{const a=i/14*Math.PI*2,b=(i+.8)/14*Math.PI*2,R=10,r2=6.8;return`<path d="M${(434+Math.cos(a)*r2).toFixed(1)} ${(180+Math.sin(a)*r2).toFixed(1)} L${(434+Math.cos(a)*R).toFixed(1)} ${(180+Math.sin(a)*R).toFixed(1)} L${(434+Math.cos(b)*R).toFixed(1)} ${(180+Math.sin(b)*R).toFixed(1)}" stroke-width=".6"/>`;}).join('')+
+      `<path d="M451 170 C461 174 472 181 484 191 C474 192 463 192 452 193 C449 186 449 177 451 170 Z" fill="${PAPER}" stroke-width="1.15"/><ellipse cx="465" cy="181" rx="5" ry="2.2" transform="rotate(25 465 181)" fill="url(#hatch)" stroke-width=".7"/>`+
+      `<path d="M480 188 q4 0 5 3 q-3 1 -5 0 Z" fill="${PAPER}" stroke-width=".8"/>`+
+      `<path d="M452 193 L421 201" stroke="${INK}" stroke-width="3.4"/><path d="M452 193 L421 201" stroke="${PAPER}" stroke-width="1.6"/>`+
+      `<path d="M415 195 L421 201 L419 209 L412 207 Z" fill="${PAPER}" stroke-width=".9"/>`+
+      `<path d="M412 207 C430 203 456 199 481 197 C471 202 453 207 435 210 C424 211 416 211 412 207 Z" fill="${PAPER}" stroke-width="1.05"/>`+
+      chain([392,222],[378,236],[360,250],5,9,7)+chain([360,250],[310,250],[268,272],7,11,7)+
+      P('M348 254 Q338 280 352 304 M334 254 Q322 282 336 310 M320 256 Q308 284 320 314','stroke-width="1.2"')+
+      P('M410 300 C404 330 380 352 344 356 L340 340 C368 334 388 318 396 298 Z','stroke-dasharray="4 3"')+
+      `<circle cx="330" cy="330" r="28" stroke-width="1.1"/>`+
+      bone(372,262,330,286,4)+bone(330,286,372,294,3)+
+      bone(300,292,338,338,6)+bone(338,338,326,384,5)+bone(326,384,322,438,4)+
+      P('M322 438 L333 441 L344 443 L354 445 M322 438 L330 444 L338 448 M322 438 L330 439 L339 439 M322 438 L316 441','stroke-width="2"')})+scale(74,'2 cm');
+}
+function henInner(){
+  const rs=[[414,216],[400,216],[386,216],[372,216],[358,218]],re=[[436,272],[420,286],[404,298],[388,310],[372,320]];
+  let ribs='';rs.forEach((s,i)=>{const e=re[i];ribs+=`<path d="M${s[0]} ${s[1]} Q${s[0]+16} ${(s[1]+e[1])/2} ${e[0]} ${e[1]}" stroke="${INK}" stroke-width="4.4"/><path d="M${s[0]} ${s[1]} Q${s[0]+16} ${(s[1]+e[1])/2} ${e[0]} ${e[1]}" stroke="${PAPER}" stroke-width="2.4"/>`;});
+  const pec='M462 262 C468 300 444 340 392 354 C364 358 350 340 360 318 C376 290 420 268 462 262 Z',thigh='M290 236 C320 228 356 250 366 290 C374 330 362 370 346 380 C330 370 318 340 306 310 C296 290 286 260 290 236 Z';
+  const fur=(d)=>`<path d="${d}" stroke="${INK}" stroke-width="6.4"/><path d="${d}" stroke="${PAPER}" stroke-width="3.6"/>`;
+  return layer({
+    wash:W(pec,'#d97a68')+W(thigh,'#c96a58'),
+    hatch:W(pec,'url(#hatchR)','opacity=".8"')+W(thigh,'url(#hatchR)'),
+    ink:`<g stroke-dasharray="2 5" opacity=".42" stroke-width="1.1">${P(HEN.body)}${P(HEN.head)}${P(COMBS.single.d)}${P(HEN.wattle)}${P(HEN.upper)}</g>`+
+      
+      `<path d="M455 112 C450 96 461 84 476 84 C486 84 492 89 495 96 C489 104 483 112 476 119 C467 123 459 120 455 112 Z" fill="${PAPER}" stroke-width="1.3"/>`+
+      `<ellipse cx="482" cy="103" rx="10.5" ry="10" fill="url(#hatch)" stroke-width="1.1"/><ellipse cx="482" cy="103" rx="10.5" ry="10" fill="${PAPER}" fill-opacity=".55" stroke="none"/>`+
+      Array.from({length:14},(_,i)=>{const a=i/14*Math.PI*2,b=(i+.8)/14*Math.PI*2,R=6.6,r2=4.4;return`<path d="M${(482+Math.cos(a)*r2).toFixed(1)} ${(103+Math.sin(a)*r2).toFixed(1)} L${(482+Math.cos(a)*R).toFixed(1)} ${(103+Math.sin(a)*R).toFixed(1)} L${(482+Math.cos(b)*R).toFixed(1)} ${(103+Math.sin(b)*R).toFixed(1)}" stroke-width=".6"/>`;}).join('')+
+      P('M459 100 C464 95 470 93 476 94 M462 108 C466 104 470 104 473 106','stroke-width=".6"')+P('M492 92 C496 96 497 102 494 108','stroke-width="1"')+
+      `<path d="M492 92 C502 94 512 98 520 104 C526 108 530 113 531 117 C522 115 512 113 500 112 C496 107 494 100 492 92 Z" fill="${PAPER}" stroke-width="1.2"/>`+
+      `<ellipse cx="507" cy="104" rx="6.5" ry="2.6" transform="rotate(18 507 104)" fill="url(#hatch)" stroke-width=".8"/>`+P('M500 112 C512 112 522 114 530 117','stroke-width=".6"')+
+      `<path d="M499 112 L476 119" stroke="${INK}" stroke-width="3.6"/><path d="M499 112 L476 119" stroke="${PAPER}" stroke-width="1.8"/>`+
+      `<path d="M470 113 L476 119 L474 127 L467 125 Z" fill="${PAPER}" stroke-width="1"/>`+
+      `<path d="M468 125 C484 122 506 120 529 120 C521 124 507 127 491 129 C480 130 472 129 468 125 Z" fill="${PAPER}" stroke-width="1.1"/><ellipse cx="483" cy="126" rx="5" ry="1.6" fill="url(#hatch)" stroke-width=".6"/>`+
+      `<path d="M457 114 C456 118 458 121 461 121" stroke-width="1.2"/>`+
+      chain([456,122],[430,148],[440,172],6,9,8)+chain([440,172],[452,198],[426,216],6,10,8)+chain([426,216],[392,212],[352,212],5,11,8)+
+      `<path d="M362 206 C340 198 300 196 270 200 C256 202 246 208 240 216 C238 226 244 236 252 244 C262 252 276 256 292 256 L300 240 C310 232 326 226 346 224 C356 222 362 216 362 206 Z" fill="${PAPER}" stroke-width="1.3"/>`+
+      P('M356 204 l1 7 M346 202 l1 7 M336 201 l1 7 M326 200 l1 7 M316 200 l1 7 M306 200 l1 7 M296 200 l1 7 M286 201 l1 7 M276 202 l1 7','stroke-width=".6"')+P('M360 212 C336 208 300 207 262 212','stroke-width=".8"')+
+      `<ellipse cx="306" cy="229" rx="6.5" ry="6" fill="url(#hatch)" stroke-width="1"/><ellipse cx="280" cy="233" rx="12" ry="5.5" transform="rotate(-8 280 233)" fill="url(#hatch)" stroke-width=".9"/><ellipse cx="272" cy="249" rx="5" ry="2.6" fill="url(#hatch)" stroke-width=".8"/>`+
+      `<path d="M298 250 C280 259 260 267 236 275" stroke="${INK}" stroke-width="4.4"/><path d="M298 250 C280 259 260 267 236 275" stroke="${PAPER}" stroke-width="2.2"/>`+
+      [[240,212],[234,208],[228,204],[222,200]].map(([x,y],i)=>`<g transform="translate(${x} ${y}) rotate(-28)"><rect x="-3" y="-3.4" width="6" height="6.8" rx="1.4" fill="${PAPER}" stroke-width="1"/><path d="M0 -3.4 l-1 -5 M0 3.4 l-1 4.5" stroke-width="1.2"/></g>`).join('')+
+      `<path d="M219 199 C212 188 207 175 207 160 C215 167 222 178 224 190 C225 196 223 200 219 201 Z" fill="${PAPER}" stroke-width="1.2"/>`+P('M216 196 C212 186 210 176 210 166','stroke-width=".6"')+
+      ribs+bone(432,216,352,226,3.4)+bone(444,220,456,266,5)+fur('M446 212 Q474 246 468 266')+fur('M438 216 Q462 250 468 266')+
+      `<path d="M452 262 C458 265 466 270 471 276 C469 297 459 320 441 336 C421 352 393 360 363 358 L331 352 C337 345 348 339 360 335 L323 334 C335 326 351 320 369 318 C391 306 414 290 432 274 C440 268 446 264 452 262 Z" fill="${PAPER}" stroke-width="1.25"/>`+
+      P('M471 278 C467 300 457 322 439 338 C419 354 391 362 361 360','stroke-width="1.8"')+P('M462 281 C450 301 432 317 404 331 C388 338 370 342 350 344','stroke-width=".8"')+
+      P('M452 266 C454 276 452 286 446 296 M366 322 C372 326 378 330 386 332','stroke-width=".6"')+`<ellipse cx="420" cy="306" rx="4" ry="2" transform="rotate(-30 420 306)" fill="url(#hatch)" stroke-width=".6"/>`+
+      bone(436,222,384,164,6)+bone(384,164,410,98,4)+bone(389,168,415,103,2.6)+bone(410,98,394,54,4)+bone(394,54,388,34,2.4)+
+      bone(300,232,350,292,7)+bone(350,292,356,378,6)+bone(346,298,340,338,2)+bone(356,378,350,456,5)+
+      P('M350 456 L366 460 L382 464 L397 466 M350 456 L362 464 L374 470 L384 474 M350 456 L362 457 L374 458 L385 458 M350 456 L341 459 L333 462','stroke-width="2.6"'),
+    fine:`<g stroke="${RED}">${P('M452 280 C430 310 404 330 372 342 M440 270 C420 296 396 316 366 328 M310 250 C330 280 344 320 348 360')}</g>`})+scale(100,'10 cm');
+}
+
+/* ---------- breeds ---------- */
+const BREEDS=[
+  {id:'jungle',name:'Red Junglefowl',tag:'Wild ancestor',origin:'South & Southeast Asia',egg:['#e8d5b6','Pale tan'],eggs:'10–15',comb:'single',legs:'#6d767b',lobe:'#eeeae0',
+   hen:{body:'#8a6a45',hackle:'#a5804f',wing:'#7a5c3b',band:'#5e4630',tail:'#4d3a28'},roo:{body:'#2e302b',hackle:'#d9792b',cape:'#c4612a',wing:'#9c3b1f',band:'#2c3b34',tail:'#1f2c28',sickle:'#1d3a33',saddle:'#d9792b'},
+   note:'Every chicken descends mainly from this shy forest bird. Hens wear camouflage, roosters wear fire.'},
+  {id:'leghorn',name:'White Leghorn',tag:'Egg machine',origin:'Italy',egg:['#f6f3ec','White'],eggs:'280–320',comb:'single',legs:'#e0a93a',lobe:'#f2f0ea',
+   hen:{body:'#f1f0ea',tail:'#ecebe4'},note:'Behind most white supermarket eggs. Light, flighty and very efficient.'},
+  {id:'rir',name:'Rhode Island Red',tag:'Backyard classic',origin:'USA',egg:['#b9794a','Brown'],eggs:'250',comb:'single',legs:'#e0a93a',
+   hen:{body:'#94401f',hackle:'#a04a24',wing:'#8a3a1d',band:'#3a2a22',tail:'#2d2522'},roo:{body:'#7e3018',hackle:'#b8521f',cape:'#a8481d',saddle:'#b8521f',tail:'#1d2420',sickle:'#1b2622'},
+   note:'Hardy and friendly. The official state bird of Rhode Island.'},
+  {id:'barred',name:'Barred Plymouth Rock',tag:'Striped',origin:'USA',egg:['#cda27a','Light brown'],eggs:'200–280',comb:'single',legs:'#e0a93a',pattern:'barred',
+   hen:{body:'#d9d7cf',tail:'#bdbbb2'},note:'Every feather is striped. Roosters carry two copies of the barring gene, so they look lighter than hens.'},
+  {id:'australorp',name:'Black Australorp',tag:'Record layer',origin:'Australia',egg:['#c9996f','Light brown'],eggs:'250+',comb:'single',legs:'#3d4246',
+   hen:{body:'#262b29',band:'#1d2321',tail:'#1b2321'},roo:{sickle:'#16302a'},note:'An Australorp hen laid 364 eggs in 365 days in the 1920s, a famous early record.'},
+  {id:'orpington',name:'Buff Orpington',tag:'Gentle giant',origin:'England',egg:['#c48c62','Brown'],eggs:'200',comb:'single',legs:'#e8cdb6',size:1.08,
+   hen:{body:'#d9a55a',band:'#c9914a',tail:'#c89148'},note:'Big, soft and famously calm. Bred in Orpington, Kent, in the 1880s.'},
+  {id:'silkie',name:'Silkie',tag:'Fur-like feathers',origin:'China',egg:['#efe4d0','Cream'],eggs:'100–120',comb:'walnut',combCol:'#5b2e3e',legs:'#3e4146',lobe:'#4f8c93',size:.86,feat:['silkie','crest','feathered','fivetoe'],
+   hen:{body:'#f1efe8'},note:'Fluffy feathers, black skin and bones, and five toes. Marco Polo wrote of chickens with "hair like a cat".'},
+  {id:'polish',name:'Polish',tag:'Crested',origin:'Europe',egg:['#f6f3ec','White'],eggs:'150',comb:'v',legs:'#6d767b',lobe:'#f2f0ea',feat:['crest'],crest:'#f1efe8',
+   hen:{body:'#262b29',tail:'#1d2321'},note:'The crest grows from a bony dome on the skull, and can cover the eyes completely.'},
+  {id:'brahma',name:'Light Brahma',tag:'Feathered feet',origin:'USA, from Asian stock',egg:['#c49270','Brown'],eggs:'150',comb:'pea',legs:'#e0a93a',feat:['feathered'],stripe:true,size:1.12,
+   hen:{body:'#ecebe4',hackle:'#cfccc3',band:'#2b2e2c',tail:'#262b29',feet:'#d6d3c9'},roo:{saddle:'#cfccc3',sickle:'#1f2523'},note:'One of the giants: roosters can top 5 kg. Feathers run all the way down to the toes.'},
+  {id:'ameraucana',name:'Ameraucana',tag:'Blue eggs',origin:'USA, from Chilean birds',egg:['#a6c6c7','Blue'],eggs:'200',comb:'pea',legs:'#6d767b',feat:['muffs'],
+   hen:{body:'#c79c62',hackle:'#d9b47a',tail:'#5a4630'},roo:{body:'#9b5a2a',hackle:'#d9a24a',saddle:'#d9a24a',tail:'#2a2a24'},note:'The blue comes from a virus that slipped into the chicken genome long ago and switched on a pigment gene in the shell gland.'},
+  {id:'marans',name:'Black Copper Marans',tag:'Chocolate eggs',origin:'France',egg:['#6e3b23','Dark brown'],eggs:'150–200',comb:'single',legs:'#d8c6aa',feat:['feathered'],
+   hen:{body:'#252a28',hackle:'#9a5a2a',tail:'#1d2321',feet:'#252a28'},roo:{hackle:'#c06a28',saddle:'#c06a28',cape:'#a65a24'},note:'Lays some of the darkest eggs of any breed. Much of the color sits on the surface and can be rubbed off.'},
+  {id:'naked',name:'Naked Neck',tag:'"Turken"',origin:'Transylvania',egg:['#c99a72','Light brown'],eggs:'150–200',comb:'single',legs:'#e0a93a',feat:['nakedneck'],
+   hen:{body:'#7c4a2c',tail:'#3a2a20'},note:'Not a chicken-turkey cross. One gene removes the neck feathers, about a third of all feathers, which helps in hot climates.'},
+  {id:'frizzle',name:'Frizzle',tag:'Curled feathers',origin:'Asia',egg:['#e7d3b8','Tinted'],eggs:'150',comb:'single',legs:'#e0a93a',feat:['frizzle'],
+   hen:{body:'#e0bd72',tail:'#d4ab5c'},note:'Every feather curls outward toward the head. Two copies of the gene make feathers so brittle they snap.'}
+];
+const COMB_LIST=[
+  ['single','Single comb','The most common. One row of points. Leghorn, Rhode Island Red. Big ones can get frostbite.','rooster'],
+  ['rose','Rose comb','Flat, covered in small bumps, with a spike pointing back. Wyandotte, Hamburg.','rooster'],
+  ['pea','Pea comb','Three low ridges, the middle one tallest. Brahma, Ameraucana. Good in the cold.','hen'],
+  ['cushion','Cushion comb','Small, smooth and low, with no points. Chantecler, bred in Canada for cold winters.','hen'],
+  ['buttercup','Buttercup comb','A cup-shaped crown of points, like two single combs joined at front and back. Sicilian Buttercup.','rooster'],
+  ['strawberry','Strawberry comb','Low and bumpy, sitting toward the front of the head. Malay, Yokohama.','hen'],
+  ['v','V-shaped comb','Two small horns, often hidden under a crest. Polish, Houdan, La Flèche.','hen']
+];
+
+/* ---------- feathers ---------- */
+function vanePts(P0,P1,P2,wmax,n){
+  const L=[],R=[],rach=[];
+  for(let i=0;i<=n;i++){const t=.2+.8*i/n,u=1-t;
+    const x=u*u*P0[0]+2*u*t*P1[0]+t*t*P2[0],y=u*u*P0[1]+2*u*t*P1[1]+t*t*P2[1];
+    let tx=2*u*(P1[0]-P0[0])+2*t*(P2[0]-P1[0]),ty=2*u*(P1[1]-P0[1])+2*t*(P2[1]-P1[1]);const m=Math.hypot(tx,ty);tx/=m;ty/=m;
+    const s=(t-.2)/.8,w=wmax*Math.pow(Math.max(0,Math.sin(Math.PI*(.04+.96*s))),.55)*(1-.25*s);
+    const nx=-ty,ny=tx;
+    L.push([x+nx*w+tx*w*.45,y+ny*w+ty*w*.45]);R.push([x-nx*w+tx*w*.45,y-ny*w+ty*w*.45]);rach.push([x,y]);}
+  return {L,R,rach};
+}
+const poly=a=>a.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+function featherSVG(kind,pat,col){
+  const r=rng(kind.length*7+(pat||'').length*13+3);let o={wash:'',ink:'',fine:'',defs:'',hatch:'',top:''};
+  const P0=[100,196],P1=kind==='frizzle'?[70,60]:[96,100],P2=kind==='frizzle'?[160,36]:[104,18];
+  if(kind==='down'){
+    let s='';for(let i=0;i<34;i++){const a=(-160+i*4.4+(r()-.5)*6)*Math.PI/180,l=40+r()*48,cx=100+Math.cos(a)*l*.5+(r()-.5)*14,cy=160+Math.sin(a)*l*.5;s+=`<path d="M100 164 Q${cx.toFixed(1)} ${cy.toFixed(1)} ${(100+Math.cos(a)*l).toFixed(1)} ${(164+Math.sin(a)*l).toFixed(1)}"/>`;}
+    o.wash=`<ellipse cx="100" cy="128" rx="58" ry="46" fill="${col||'#e7ddc8'}" opacity=".7"/>`;o.ink=P('M100 196 L100 164','stroke-width="2.4"');o.fine=s;
+    return layer(o);
+  }
+  const V=vanePts(P0,P1,P2,30,30), shape=poly(V.L)+' '+poly(V.R.slice().reverse()).replace('M','L')+' Z', u=++UID;
+  const rachD=`M${P0[0]} ${P0[1]} Q${P1[0]} ${P1[1]} ${P2[0]} ${P2[1]}`;
+  if(kind==='silkie'){
+    let s='';V.rach.forEach((p,i)=>{if(i%1)return;[1,-1].forEach(sd=>{const e=sd>0?V.L[i]:V.R[i],ex=p[0]+(e[0]-p[0])*1.5+(r()-.5)*16,ey=p[1]+(e[1]-p[1])*1.5+(r()-.5)*16;s+=`<path d="M${p[0].toFixed(1)} ${p[1].toFixed(1)} q${((ex-p[0])/2+(r()-.5)*14).toFixed(1)} ${((ey-p[1])/2+(r()-.5)*14).toFixed(1)} ${(ex-p[0]).toFixed(1)} ${(ey-p[1]).toFixed(1)}"/>`;});});
+    o.wash=W(shape,col||'#efece4','opacity=".5" transform="translate(100 110) scale(1.25) translate(-100 -110)"');o.ink=P(rachD,'stroke-width="2.2"');o.fine=s;return layer(o);
+  }
+  o.defs=`<clipPath id="fv${u}"><path d="${shape}"/></clipPath>`;
+  let barbs='';V.rach.forEach((p,i)=>{barbs+=`<path d="M${p[0].toFixed(1)} ${p[1].toFixed(1)} L${V.L[i][0].toFixed(1)} ${V.L[i][1].toFixed(1)} M${p[0].toFixed(1)} ${p[1].toFixed(1)} L${V.R[i][0].toFixed(1)} ${V.R[i][1].toFixed(1)}"/>`;});
+  let after='';for(let i=0;i<10;i++){const sd=i%2?1:-1;after+=`<path d="M100 ${178-i*2} q${sd*(10+r()*10)} ${-6-r()*8} ${sd*(18+r()*14)} ${-14-r()*10}"/>`;}
+  const base=col||'#c7a77a';
+  o.wash=W(shape,pat==='laced'||pat==='spangled'?'#efede6':pat==='mottled'?'#20262a':pat==='barred'?'#e9e7df':base);
+  if(pat==='barred'){let s='';for(let y=20;y<200;y+=16)s+=`<rect x="40" y="${y}" width="140" height="8" fill="#2b2c2a" opacity=".85" transform="rotate(-6 100 110)"/>`;o.hatch=`<g clip-path="url(#fv${u})">${s}</g>`;}
+  if(pat==='laced')o.hatch=`<g clip-path="url(#fv${u})"><path d="${shape}" fill="none" stroke="#22262a" stroke-width="13"/></g>`;
+  if(pat==='spangled'){const p=V.rach[25];o.hatch=`<g clip-path="url(#fv${u})"><ellipse cx="${p[0]}" cy="${p[1]-8}" rx="24" ry="26" fill="#22262a"/></g>`;}
+  if(pat==='penciled'){let s='';[.78,.56,.34].forEach(k=>s+=`<path d="${shape}" fill="none" stroke="#2b2420" stroke-width="2.2" transform="translate(100 104) scale(${k}) translate(-100 -104)"/>`);o.hatch=`<g clip-path="url(#fv${u})">${s}</g>`;}
+  if(pat==='mottled'){const p=V.rach[27];o.hatch=`<g clip-path="url(#fv${u})"><path d="M${p[0]-30} ${p[1]+34} L${p[0]} ${p[1]-26} L${p[0]+30} ${p[1]+34} L${p[0]} ${p[1]+10} Z" fill="#f4f2e9"/></g>`;}
+  if(pat==='solid')o.hatch=`<g clip-path="url(#fv${u})"><path d="M80 40 C110 80 120 140 112 190" stroke="#3e7a62" stroke-width="10" fill="none" opacity=".55"/></g>`;
+  o.ink=P(shape,'stroke-width="1.2"')+P(rachD,'stroke-width="2.2"')+P('M100 196 L100 214','stroke-width="2.4"');
+  o.fine=`<g clip-path="url(#fv${u})">${barbs}</g>`+after;
+  return layer(o);
+}
+const FTYPES=[
+  ['contour','Contour feather','Normal','Tiny hooks called barbicels zip the barbs into a smooth, flat vane. It sheds rain and wind, and makes flight possible.'],
+  ['down','Down feather','Insulation','A fluffy feather with no hooks, hidden under the contour feathers. A newly hatched chick wears only down.'],
+  ['silkie','Silkie feather','Fur-like','The barbs have no working hooks, so they never zip together. Silkies can\'t fly and get soaked in rain. Linked to the PDSS2 gene (Feng et al., 2014).'],
+  ['frizzle','Frizzled feather','Curled','The shaft bends back toward the head, so feathers stick out. Caused by a change in the keratin gene KRT75 (Ng et al., 2012).']
+];
+const FPLACES=[
+  ['polish','Crest','Topknot','A pom-pom of feathers on the head, often over a domed skull. Linked to the HOXC8 gene. Polish, Silkie, Houdan.','406 40 150 150'],
+  ['ameraucana','Muffs & beard','Cheek feathers','Tufts on the cheeks and under the beak replace the wattles. Linked to HOXB8 (Guo et al., 2016). Ameraucana, Faverolles.','410 60 140 140'],
+  ['brahma','Feathered feet','Ptilopody','Leg scales grow feathers instead. Changes near the PITX1 and TBX5 genes make the legs act a little like wings (Domyan et al., 2016). Brahma, Cochin, Silkie.','290 340 160 150'],
+  ['naked','Naked neck','Fewer feathers','A single gene, linked to BMP12, stops feathers from growing on the neck (Mou et al., 2011). Helps birds shed heat.','380 70 160 190']
+];
+const FPATTERNS=[
+  ['solid','Solid','Black Australorp','One color throughout. In black birds, light catches a green or purple sheen.','#23302b'],
+  ['barred','Barred','Plymouth Rock','Alternating dark and light bands across each feather. The barring gene is on the Z sex chromosome.',''],
+  ['laced','Laced','Silver Laced Wyandotte','A dark border around a light center, so the bird looks covered in scales.',''],
+  ['spangled','Spangled','Silver Spangled Hamburg','A single dark spot or crescent at the tip of each feather.',''],
+  ['penciled','Penciled','Partridge Cochin hen','Fine dark lines that follow the feather\'s outline, like pencil rings.','#b98a52'],
+  ['mottled','Mottled','Ancona','Dark feathers with a white V at the tip. Mottling increases with every molt.','']
+];
+
+/* ---------- anatomy data ---------- */
+const henOuter=()=>drawHen(BREEDS[2],'hen')+scale(100,'10 cm');
+const rooOuter=()=>drawHen(BREEDS[2],'rooster')+scale(100,'10 cm');
+const STAGES={
+  egg:{name:'Fresh egg',cap:'fig. 1 · Brown egg, freshly laid',kv:[['58 g','typical mass'],['37.5 °C','to incubate'],['21 days','until hatch']],
+    outer:{draw:eggOuter,parts:[
+      {n:'Shell',t:'calcium carbonate',a:[186,262],p:[104,238],d:'About 95% calcium carbonate. A hen moves roughly 2 g of calcium into each shell, and some of it comes from a special reserve inside her own bones.'},
+      {n:'Pores',t:'7,000–17,000 per egg',a:[438,218],p:[505,124],d:'Thousands of tiny pores let oxygen in and carbon dioxide and water vapor out. A developing chick breathes through the shell for three weeks.'},
+      {n:'Cuticle',t:'the "bloom"',a:[322,94],p:[366,44],d:'A thin protein coat over the shell that seals the pores against bacteria. Washing eggs strips it off, which is why washed eggs need refrigeration.'},
+      {n:'Shell color',t:'protoporphyrin',a:[262,356],p:[150,412],d:'Brown pigment is painted on in the last hours inside the shell gland. Color depends on breed. Inside, brown and white eggs are the same.'},
+      {n:'Blunt end',t:'air cell side',a:[300,446],p:[392,492],d:'The air cell forms here as the egg cools after laying. Store eggs blunt end up so the yolk stays centered and away from the air.'}]},
+    inner:{draw:eggInner,parts:[
+      {n:'Shell membranes',t:'two keratin layers',a:[156,250],p:[92,222],d:'Two thin membranes line the shell. They stop bacteria and hold the egg together, then split apart at the blunt end to form the air cell.'},
+      {n:'Air cell',t:'first breath',a:[300,428],p:[392,494],d:'On day 19 or 20 the chick pokes its beak into this pocket and takes its first breath of air, before it ever cracks the shell.'},
+      {n:'Thin albumen',t:'outer white',a:[176,330],p:[96,362],d:'The runny outer white. It cushions the yolk and holds most of the egg\'s water.'},
+      {n:'Thick albumen',t:'inner white',a:[252,392],p:[158,450],d:'A firmer gel around the yolk, rich in protein and antibacterial enzymes such as lysozyme. It thins as an egg ages, so fresh eggs fry up tall.'},
+      {n:'Chalazae',t:'yolk anchors',a:[300,172],p:[380,128],d:'Twisted cords of protein that hold the yolk in the middle, like a hammock. The yolk can spin so the germinal disc always floats to the top.'},
+      {n:'Germinal disc',t:'blastoderm',a:[300,217],p:[226,146],d:'The small white spot where an embryo begins. In a fertilized egg it already holds tens of thousands of cells when the egg is laid.'},
+      {n:'Yolk',t:'vitellus',a:[338,300],p:[500,300],d:'Fat, protein and vitamins for the whole incubation. It is laid down in daily rings of light and dark yolk, a bit like tree rings.'}]}},
+  embryo:{name:'Embryo, day 14',cap:'fig. 2 · Incubated egg, day 14',kv:[['Day 14','of 21'],['Day 2','first heartbeat'],['~12%','egg mass lost as water by hatch']],
+    outer:{draw:embryoOuter,parts:[
+      {n:'Candling',t:'shining a light through',a:[360,180],p:[470,130],d:'Hold an egg to a bright light in the dark and the inside glows. Farmers have checked eggs this way for centuries to see which ones are developing.'},
+      {n:'Blood vessels',t:'a lung inside the shell',a:[372,330],p:[490,370],d:'A web of vessels spreads just under the shell membranes. It picks up oxygen through the pores and works as the embryo\'s lung.'},
+      {n:'Embryo shadow',t:'the dark mass',a:[280,300],p:[130,330],d:'By day 14 the embryo is big enough to show as a dark shape that moves when the egg is turned.'},
+      {n:'Air cell',t:'growing every day',a:[300,420],p:[392,494],d:'As water evaporates through the shell, the air cell gets bigger. Its size tells you if humidity in the incubator is right.'}]},
+    inner:{draw:embryoInner,parts:[
+      {n:'Embryo',t:'curled, head down',a:[300,330],p:[150,420],d:'Feathers, beak and claws are forming. Over the next week it turns so its beak points toward the air cell, ready to hatch.'},
+      {n:'Eye',t:'biggest organ in the head',a:[248,272],p:[146,216],d:'A chick\'s eyes are huge from the start. At this stage each eye is larger than the brain.'},
+      {n:'Amnion',t:'water bag',a:[380,300],p:[492,280],d:'A sac of amniotic fluid that cushions the embryo, the same kind of membrane that surrounds human babies. It is what makes birds, reptiles and mammals amniotes.'},
+      {n:'Allantois',t:'lung and waste bag',a:[220,380],p:[110,440],d:'Collects waste and, pressed against the shell, swaps oxygen and carbon dioxide through the pores.'},
+      {n:'Yolk sac',t:'vitellus',a:[300,190],p:[392,136],d:'Shrinking as the embryo eats it. A cord of blood vessels links it to the belly. It is pulled inside just before hatching.'},
+      {n:'Albumen',t:'what\'s left of the white',a:[300,108],p:[220,52],d:'Most of the white has been used for water and protein. The rest is swallowed by the embryo before hatching.'},
+      {n:'Air space',t:'first breath here',a:[300,425],p:[392,494],d:'Much larger now. On day 19 or 20 the chick will poke into it and start breathing air.'}]}},
+  chick:{name:'Hatchling',cap:'fig. 3 · Chick, one day old',kv:[['40 g','about ⅔ of the egg'],['32–35 °C','needs warmth'],['~3 days','without food']],
+    outer:{draw:chickOuter,parts:[
+      {n:'Egg tooth',t:'caruncle',a:[483,190],p:[524,150],d:'A hard tip on the beak used to pip through the shell on day 21. It falls off or is reabsorbed within a few days of hatching.'},
+      {n:'Eyes',t:'open at hatch',a:[434,177],p:[470,112],d:'Chicks hatch with open eyes and can peck accurately within hours. Biologists call this being precocial: born ready to go.'},
+      {n:'Natal down',t:'first feathers',a:[392,150],p:[352,110],d:'Fluffy down traps heat, but a chick cannot fully control its body temperature for its first weeks. It runs under the hen to warm up.'},
+      {n:'Wing',t:'feathers first',a:[352,288],p:[290,214],d:'Real feathers start on the wings within days. A chick can flutter-hop at about two weeks old.'},
+      {n:'Navel',t:'yolk sac scar',a:[350,392],p:[290,430],d:'Just before hatching, the chick pulls the leftover yolk into its belly. The navel seals over it.'},
+      {n:'Feet',t:'ready to walk',a:[350,444],p:[430,486],d:'Within hours a chick can walk, follow its mother and imprint on the first moving thing it sees.'}]},
+    inner:{draw:chickInner,parts:[
+      {n:'Skull',t:'still fusing',a:[404,160],p:[370,108],d:'Huge compared with the body. The skull bones have not fused yet, and the brain grows fast in the first weeks.'},
+      {n:'Eye socket',t:'orbit',a:[434,178],p:[484,128],d:'The eyes take up much of the head. Each eye is larger than the brain hemisphere behind it.'},
+      {n:'Keel',t:'mostly cartilage',a:[392,326],p:[462,352],d:'The breastbone keel is soft cartilage at hatch and turns to bone over months. Flight muscles stay small for now.'},
+      {n:'Yolk sac',t:'packed lunch',a:[330,334],p:[262,396],d:'The leftover yolk can feed a chick for up to three days. That is why newly hatched chicks can be shipped without food or water.'},
+      {n:'Leg muscles',t:'built to walk',a:[312,322],p:[236,320],d:'Legs are already strong at hatch, so the chick can forage beside the hen from day one.'},
+      {n:'Spine',t:'vertebral column',a:[312,252],p:[290,200],d:'A short neck for now. The neck lengthens fast as the chick grows into its adult proportions.'}]}},
+  chicken:{name:'Adult hen',cap:'fig. 4 · Rhode Island Red',kv:[['2–3 kg','hen; roosters 3–4 kg'],['41 °C','body temperature'],['~300','eggs a year, modern layer']],
+    hen:{draw:henOuter,parts:[
+      {n:'Comb',t:'single comb',a:[482,80],p:[470,36],d:'Bare, blood-rich skin that releases heat. A hen\'s comb is smaller than a rooster\'s and turns bright red when she is laying.'},
+      {n:'Eye',t:'sees ultraviolet',a:[486,104],p:[548,66],d:'Chickens have four kinds of color cones plus "double cones", and can see ultraviolet light.'},
+      {n:'Beak',t:'keratin over bone',a:[520,112],p:[562,110],d:'Grows all the time and is worn down by pecking. The tip is packed with touch receptors for sorting seeds from grit.'},
+      {n:'Wattles',t:'heat and signals',a:[504,146],p:[552,164],d:'Help cool the bird. Smaller on hens than on roosters.'},
+      {n:'Earlobe',t:'egg color clue',a:[466,117],p:[424,88],d:'A rough rule breeders use: red earlobes often mean brown eggs, white earlobes often mean white eggs.'},
+      {n:'Hackle',t:'neck feathers',a:[454,170],p:[400,138],d:'Neck feathers with rounded tips on a hen. They flare out when she is threatened.'},
+      {n:'Back',t:'',a:[330,214],p:[326,164],d:'Broad and flat on a laying hen, giving room for the egg-making organs inside.'},
+      {n:'Wing',t:'short-burst flight',a:[350,272],p:[262,166],d:'Chickens can fly short distances to escape or reach a roost. The record flight lasted 13 seconds.'},
+      {n:'Tail feathers',t:'fan-shaped',a:[150,130],p:[108,62],d:'A hen\'s tail is a neat fan, held fairly upright. No sickle feathers.'},
+      {n:'Fluff',t:'soft underfeathers',a:[268,318],p:[208,350],d:'Downy feathers around the vent and thighs keep the hen warm and cover her eggs when she sits on the nest.'},
+      {n:'Hock joint',t:'the ankle',a:[352,394],p:[290,404],d:'Looks like a backward knee, but it is the ankle. The real knee is hidden in the feathers.'},
+      {n:'Shank',t:'scaled leg',a:[352,426],p:[288,446],d:'Fused foot bones covered in scales, a reminder of reptile ancestors. Its color is set by breed.'},
+      {n:'Toes & claws',t:'four toes',a:[392,464],p:[444,494],d:'Three toes forward, one back. The claws are used for scratching up food from the ground.'}]},
+    rooster:{draw:rooOuter,parts:[
+      {n:'Comb',t:'large, deep red',a:[482,46],p:[430,22],d:'Much bigger than a hen\'s. Its size and color signal health and testosterone to hens and rivals.'},
+      {n:'Wattles',t:'long and swinging',a:[506,140],p:[556,152],d:'Roosters shake their wattles while calling hens over to food, a display called tidbitting.'},
+      {n:'Hackle',t:'pointed neck feathers',a:[476,150],p:[546,108],d:'Long, pointed, glossy feathers. Pointed hackles are one of the surest ways to tell a young rooster from a hen.'},
+      {n:'Cape',t:'',a:[418,200],p:[394,140],d:'Where the hackle drapes over the shoulders and the top of the back.'},
+      {n:'Shoulder',t:'',a:[452,246],p:[530,236],d:'The front edge of the wing where it meets the body, tucked under the hackle.'},
+      {n:'Wing bow',t:'',a:[424,262],p:[528,284],d:'The upper front of the folded wing, often a brighter color on roosters.'},
+      {n:'Back',t:'',a:[350,212],p:[344,160],d:'Shorter and narrower than a hen\'s, sloping down into the saddle.'},
+      {n:'Saddle',t:'pointed back feathers',a:[294,232],p:[286,166],d:'Long pointed feathers on the lower back that hang over the wing tips. Hens\' saddle feathers are short and round.'},
+      {n:'Sickle feathers',t:'curved tail feathers',a:[96,104],p:[64,52],d:'The long curved feathers that arch over the tail. Only roosters grow them.'},
+      {n:'Main tail',t:'',a:[176,150],p:[200,94],d:'The straight tail feathers underneath the sickles, the same set a hen has.'},
+      {n:'Lesser sickles',t:'',a:[148,262],p:[94,300],d:'Shorter curved feathers at the sides of the tail.'},
+      {n:'Fluff',t:'',a:[272,322],p:[212,352],d:'Soft downy feathers around the thighs and vent.'},
+      {n:'Hock joint',t:'the ankle',a:[360,402],p:[300,412],d:'Looks like a backward knee, but it is the ankle.'},
+      {n:'Spur',t:'bone plus keratin',a:[344,437],p:[290,446],d:'A sharp point on the back of the leg with a bony core. It keeps growing, so you can roughly age a rooster by its spurs.'},
+      {n:'Toes & claws',t:'',a:[400,474],p:[448,500],d:'Same four toes as a hen, used for scratching and for holding a perch.'}]},
+    inner:{draw:henInner,parts:[
+      {n:'Skull',t:'light and thin',a:[470,94],p:[512,46],d:'Paper-thin bone with air spaces keeps the head light. The eye socket takes up much of it.'},
+      {n:'Beak bones',t:'incisive & mandible',a:[518,118],p:[562,140],d:'The upper beak is built on the incisive (premaxilla) bone, the lower on the mandible. A small quadrate bone lets the upper beak flex up when the mouth opens.'},
+      {n:'Neck vertebrae',t:'14 cervical bones',a:[446,180],p:[510,196],d:'Twice as many as yours, in an S-curve. That lets a chicken hold its head perfectly still while its body moves. The first two are the atlas and epistropheus (axis).'},
+      {n:'Wing bones',t:'humerus, radius, ulna',a:[398,130],p:[330,92],d:'Raised here to show them. Same plan as your arm: humerus, then radius and ulna, then fused hand bones (metacarpus) and phalanges. The humerus is hollow and filled with air.'},
+      {n:'Scapula',t:'shoulder blade',a:[390,222],p:[344,170],d:'A thin, sword-shaped bone lying along the ribs.'},
+      {n:'Clavicle & coracoid',t:'wishbone and strut',a:[460,248],p:[540,236],d:'The two clavicles fuse into the wishbone (furcula), which flexes like a spring. The coracoid is a strong strut from shoulder to breastbone.'},
+      {n:'Breast muscle',t:'pectoralis major',a:[420,310],p:[520,300],d:'Pulls the wing down. White meat: built for short, explosive bursts, with little oxygen-storing myoglobin.'},
+      {n:'Keel',t:'sternum',a:[430,330],p:[492,380],d:'A deep blade on the breastbone that anchors the flight muscles.'},
+      {n:'Ilium & synsacrum',t:'fused hips and spine',a:[300,210],p:[292,160],d:'Vertebrae fused to the pelvis make a rigid frame for walking all day and for laying eggs.'},
+      {n:'Pygostyle',t:'"parson\'s nose"',a:[213,180],p:[168,150],d:'Fused tail bones that anchor the tail feathers. It replaced the long bony tail of dinosaurs.'},
+      {n:'Ischium & pubis',t:'rear hip bones',a:[258,266],p:[198,292],d:'The pubis is a thin rod pointing backward. The gap between the two pubic bones widens when a hen is laying, and keepers check it by touch.'},
+      {n:'Femur',t:'thigh bone',a:[326,262],p:[240,332],d:'Short and held almost horizontally, hidden inside the body feathers.'},
+      {n:'Tibia & fibula',t:'drumstick bones',a:[353,340],p:[410,394],d:'The tibia is fused with ankle bones (tibiotarsus). The fibula is a thin splint beside it.'},
+      {n:'Metatarsus',t:'the shank',a:[352,420],p:[290,440],d:'Fused foot bones, so chickens walk on their toes.'}]}}
+};
+
+/* ---------- anatomy UI ---------- */
+let stage='chicken',layer_='outer',sex='hen',sel=0;
+const fig=$('#fig');
+const getL=()=>{const S=STAGES[stage];if(layer_==='inner')return S.inner;return stage==='chicken'?S[sex]:S.outer;};
+function pins(parts){
+  return parts.map((p,i)=>{const right=p.p[0]<420;return `<g class="pin${i===sel?' on':''}" data-i="${i}" tabindex="0" role="button" aria-label="${i+1}: ${p.n}">
+    <line class="lead" x1="${p.a[0]}" y1="${p.a[1]}" x2="${p.p[0]}" y2="${p.p[1]}"/><circle class="anchor" cx="${p.a[0]}" cy="${p.a[1]}" r="2.4"/>
+    <circle class="pc" cx="${p.p[0]}" cy="${p.p[1]}" r="11" filter="url(#rough1)"/><text class="num" x="${p.p[0]}" y="${p.p[1]}" dy=".34em">${i+1}</text>
+    <text class="label tag" x="${p.p[0]+(right?16:-16)}" y="${p.p[1]}" dy=".32em" text-anchor="${right?'start':'end'}">${p.n}</text></g>`;}).join('');
+}
+function renderFig(){const L=getL();fig.innerHTML=L.draw()+pins(L.parts);fig.appendChild(fig.querySelector('.pin.on')||document.createTextNode(''));}
+function renderPanel(){
+  const S=STAGES[stage],L=getL(),p=L.parts[sel];
+  const nm=stage==='chicken'?(sex==='hen'?'Adult hen':'Adult rooster'):S.name;
+  $('#kv').innerHTML=S.kv.map(k=>`<div><b>${k[0]}</b><span>${k[1]}</span></div>`).join('');
+  const lay=layer_==='outer'?'External':(stage==='egg'||stage==='embryo'?'Cross-section':'Bones & muscles');
+  $('#detail').innerHTML=`<p class="mono">${lay} · ${sel+1}/${L.parts.length}</p><h3>${p.n}</h3>${p.t?`<p class="term">${p.t}</p>`:''}<p class="d">${p.d}</p>`;
+  $('#parts').innerHTML=L.parts.map((q,i)=>`<li><button type="button" data-i="${i}" class="${i===sel?'on':''}"><span class="n">${i+1}</span>${q.n}</button></li>`).join('');
+    $('#figCap').textContent=layer_==='outer'?S.cap+(stage==='chicken'?(sex==='hen'?' hen':' rooster'):''):S.cap.replace(/·.*/,'· '+lay.toLowerCase());
+  $('#figTitle').textContent=`${nm}, ${lay.toLowerCase()}`;
+  $('#sexSeg').hidden=!(stage==='chicken'&&layer_==='outer');
+}
+function select(i){sel=i;fig.querySelectorAll('.pin').forEach(g=>g.classList.toggle('on',+g.dataset.i===i));const on=fig.querySelector('.pin.on');if(on)fig.appendChild(on);renderPanel();}
+function swap(){
+  document.querySelectorAll('#stageSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.stage===stage));
+  document.querySelectorAll('#layerSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.layer===layer_));
+  document.querySelectorAll('#sexSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.sex===sex));
+  if(reduce){renderFig();renderPanel();return;}
+  fig.classList.add('out');setTimeout(()=>{renderFig();renderPanel();requestAnimationFrame(()=>fig.classList.remove('out'));},200);
+}
+$('#stageSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.dataset.stage===stage)return;stage=b.dataset.stage;sel=0;swap();});
+$('#layerSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.dataset.layer===layer_)return;layer_=b.dataset.layer;sel=0;swap();});
+$('#sexSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.dataset.sex===sex)return;sex=b.dataset.sex;sel=0;swap();});
+fig.addEventListener('click',e=>{const g=e.target.closest('.pin');if(g)select(+g.dataset.i);});
+fig.addEventListener('keydown',e=>{const g=e.target.closest('.pin');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(+g.dataset.i);}});
+$('#parts').addEventListener('click',e=>{const b=e.target.closest('button');if(b)select(+b.dataset.i);});
+renderFig();renderPanel();
+
+/* home lineup */
+const minis=[['egg','Egg','day 0',eggOuter],['embryo','Embryo','day 14 · candled',embryoOuter],['chick','Chick','day 21 · hatch',chickOuter],['chicken','Chicken','week 20 · first egg',henOuter]];
+$('#lineup').innerHTML=minis.map(m=>`<button class="mini" type="button" data-stage="${m[0]}"><div class="plate"><svg class="pl" viewBox="0 0 600 520" aria-hidden="true">${m[3]()}</svg></div><b>${m[1]}</b><span class="hand">${m[2]}</span></button>`).join('');
+$('#lineup').addEventListener('click',e=>{const b=e.target.closest('.mini');if(!b)return;stage=b.dataset.stage;layer_='outer';sex='hen';sel=0;swap();location.hash='anatomy';});
+
+/* ---------- field guide ---------- */
+let guideDone=false, gSex='hen';
+function renderBreeds(){
+  $('#breedGrid').innerHTML=BREEDS.map((b,i)=>`<article class="breed"><div class="plate"><svg class="pl" viewBox="40 14 510 480" role="img" aria-label="${b.name} ${gSex}">${drawHen(Object.assign({seed:i*11+3},b),gSex)}</svg><span class="cap">${b.tag}</span></div>
+    <div><h4>${b.name}</h4><p class="mono" style="margin-top:3px">${b.origin}</p></div>
+    <div class="meta"><span><i class="eggdot" style="background:${b.egg[0]}"></i>${b.egg[1]} eggs</span><span>${b.eggs} / yr</span><span>${COMB_LIST.find(c=>c[0]===b.comb)?.[1]||'Walnut comb'}</span></div>
+    <p>${b.note}</p></article>`).join('');
+}
+function renderGuide(){
+  if(guideDone)return;guideDone=true;
+  renderBreeds();
+  $('#featherTypes').innerHTML=FTYPES.map(f=>`<div class="feather"><div class="plate"><svg class="pl" viewBox="0 0 200 220" role="img" aria-label="${f[1]}">${featherSVG(f[0],null,f[0]==='silkie'?'#ece8de':null)}</svg></div><span class="tagl">${f[2]}</span><b>${f[1]}</b><p>${f[3]}</p></div>`).join('');
+  $('#featherPatterns').innerHTML=FPATTERNS.map(f=>`<div class="feather"><div class="plate"><svg class="pl" viewBox="0 0 200 220" role="img" aria-label="${f[1]} feather">${featherSVG('contour',f[0],f[4]||null)}</svg></div><span class="tagl">${f[2]}</span><b>${f[1]}</b><p>${f[3]}</p></div>`).join('');
+}
+$('#breedSex').addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.dataset.sex===gSex)return;gSex=b.dataset.sex;document.querySelectorAll('#breedSex button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderBreeds();});
+
+/* ---------- timeline ---------- */
+const EVENTS=[
+  ['312','Mya','Deep time','The shelled egg','Early four-legged animals evolve an egg with a shell and inner membranes that can survive on dry land. So the egg came first, by about 300 million years.'],
+  ['230','Mya','Deep time','Dinosaurs appear','Among them are the theropods: two-legged, three-toed hunters, many with hollow bones and a wishbone.'],
+  ['160','Mya','Deep time','Feathered dinosaurs','Anchiornis, a crow-sized theropod from China, has feathers on all four limbs. Feathers start out for warmth and display, before flight.'],
+  ['150','Mya','Deep time','Archaeopteryx','Feathers and wings, but also teeth, clawed fingers and a long bony tail. A snapshot of the dinosaur-to-bird transition.'],
+  ['66.7','Mya','Deep time','The "Wonderchicken"','Asteriornis maastrichtensis, a fossil skull from Belgium, sits close to the split between the chicken and duck families (Field et al., 2020).',1],
+  ['66','Mya','Deep time','The asteroid','The non-bird dinosaurs die out. Small ground-dwelling birds, the ancestors of fowl among them, make it through.'],
+  ['Wild','','Ancestor','Red junglefowl','Gallus gallus lives in forests of South and Southeast Asia. Shy and fast, it lays only a few clutches a year. Grey junglefowl later add the gene for yellow skin.'],
+  ['~1500','BCE','Domestication','Chickens are born','Junglefowl move into rice and millet fields in central Thailand and become chickens, about 3,500 years ago (Peters et al., 2022).',1],
+  ['~800','BCE','Domestication','West to Europe','Chickens reach the Mediterranean and Europe. At first they seem to be kept as exotic or sacred birds, and often buried rather than eaten (Best et al., 2022).'],
+  ['~1000','CE','Domestication','Across the Pacific','Polynesian voyagers carry chickens in their canoes to islands across the Pacific Ocean.'],
+  ['1850','s','Modern','"Hen fever"','Victorian poultry shows spark a craze for exotic breeds. Many of today\'s breeds are fixed in this era.'],
+  ['1948','','Modern','Chicken of Tomorrow','A US contest to breed a meatier bird launches the modern broiler industry.'],
+  ['2004','','Modern','Genome sequenced','The chicken becomes the first bird and the first farm animal to have its full genome sequenced.'],
+  ['2007','','Modern','A T. rex connection','Protein fragments from a 68-million-year-old T. rex bone most closely match chicken (Asara et al., 2007).'],
+  ['Today','','Modern','Most common bird alive','More than 25 billion chickens live at any one time, outnumbering every other bird on Earth.',1]
+];
+const track=$('#track');
+track.innerHTML=EVENTS.map(e=>`<article class="ev${e[5]?' key':''}"><span class="mono era">${e[2]}</span><div class="when">${e[0]}<small>${e[1]}</small></div><h3>${e[3]}</h3><p>${e[4]}</p></article>`).join('');
+const cards=[...track.children];
+function railUpdate(){
+  const max=track.scrollWidth-track.clientWidth,f=max>0?track.scrollLeft/max:0;
+  $('#railFill').style.width=(8+f*92)+'%';
+  const w=cards[0].offsetWidth+16||1,idx=Math.min(cards.length-1,Math.round(track.scrollLeft/w));
+  $('#railLabel').textContent=(EVENTS[idx][0]+' '+EVENTS[idx][1]).trim();
+}
+track.addEventListener('scroll',railUpdate,{passive:true});
+const step=d=>track.scrollBy({left:d*(cards[0].offsetWidth+16),behavior:reduce?'auto':'smooth'});
+$('#prevEv').onclick=()=>step(-1);$('#nextEv').onclick=()=>step(1);
+
+const DAY=[
+  [4.75,'Pre-dawn crow','Roosters crow before sunrise on an internal clock, even in dim light. The top-ranked rooster crows first and the others wait their turn (Shimmura et al., 2015).'],
+  [6,'Fly down from the roost','At first light the flock drops from the perches. Their junglefowl ancestors sleep in trees to stay away from predators.'],
+  [7,'Morning forage','Scratch, step back, look, peck. Chickens will dig for food even when a full feeder is right there, a habit called contrafreeloading.'],
+  [9.5,'Egg laying','Most hens lay in the morning. An egg takes about 25 hours to form, so laying shifts later each day until the hen skips a day and resets.'],
+  [10,'The egg song','A loud cackle right after laying. It may help the hen find the flock again or draw attention away from the nest.'],
+  [12.5,'Dust bath','Rolling in dry soil works dust into the feathers to soak up excess oil and smother mites and lice. It is one of their strongest urges.'],
+  [14,'Sunbathe and preen','Lying on one side with a wing spread to the sun, then preening with oil from a gland at the base of the tail.'],
+  [16.5,'Afternoon forage','A second feeding peak to fill the crop, a storage pouch in the neck, before night.'],
+  [18.75,'Go to roost','The flock climbs to the perches at dusk. Rank decides who gets the safest, highest spots.'],
+  [21.5,'Sleep','Like many birds, chickens can rest one half of the brain while the other half keeps one eye open for danger.']
+];
+const dial=$('#dial'),C=180,R=138;
+const pt=(h,r)=>{const a=(h/24*360+90)*Math.PI/180;return[C+r*Math.cos(a),C+r*Math.sin(a)];};
+function arc(h1,h2,r){const[a,b]=pt(h1,r),[c,d]=pt(h2,r);const span=(h2-h1+24)%24;return`M${a.toFixed(1)} ${b.toFixed(1)} A${r} ${r} 0 ${span>12?1:0} 1 ${c.toFixed(1)} ${d.toFixed(1)}`;}
+const fmt=h=>{const hh=Math.floor(h),mm=Math.round((h-hh)*60);return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');};
+let ticks='';
+for(let h=0;h<24;h++){const major=h%6===0;const[a,b]=pt(h,R-24),[c,d]=pt(h,R-(major?34:29));ticks+=`<line class="tick${major?' major':''}" x1="${a.toFixed(1)}" y1="${b.toFixed(1)}" x2="${c.toFixed(1)}" y2="${d.toFixed(1)}"/>`;
+  if(major){const[x,y]=pt(h,R-48);ticks+=`<text class="num" x="${x.toFixed(1)}" y="${y.toFixed(1)}" dy=".35em">${String(h).padStart(2,'0')}:00</text>`;}}
+dial.innerHTML=`<circle class="face" cx="${C}" cy="${C}" r="${R+12}"/><path class="dayarc" d="${arc(5.75,19.25,R)}"/><path class="nightarc" d="${arc(19.25,5.75,R)}"/>${ticks}
+<g>${DAY.map((d,i)=>{const[x,y]=pt(d[0],R);return`<circle class="evdot" data-i="${i}" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7"><title>${d[1]}</title></circle>`;}).join('')}</g>
+<line class="hand" id="hand" x1="${C}" y1="${C}" x2="${C}" y2="${C-100}"/><circle class="hub" cx="${C}" cy="${C}" r="4"/><circle id="orb" r="10" class="sun"/>
+<text class="clock" id="clock" x="${C}" y="${C+46}">05:00</text><text class="clabel" x="${C}" y="${C+66}">LOCAL SUN TIME</text>`;
+$('#daylist').innerHTML=DAY.map((d,i)=>`<li><button type="button" data-i="${i}"><time>${fmt(d[0])}</time><span>${d[1]}</span></button></li>`).join('');
+function setHour(h){
+  $('#hour').value=h;const[x,y]=pt(h,R-62),[ox,oy]=pt(h,R);
+  $('#hand').setAttribute('x2',x.toFixed(1));$('#hand').setAttribute('y2',y.toFixed(1));
+  const orb=$('#orb'),day=h>=5.75&&h<19.25;orb.setAttribute('cx',ox.toFixed(1));orb.setAttribute('cy',oy.toFixed(1));orb.setAttribute('class',day?'sun':'moon');
+  $('#clock').textContent=fmt(h);
+  let idx=DAY.length-1;for(let i=0;i<DAY.length;i++)if(DAY[i][0]<=h)idx=i;
+  $('#nowTime').textContent=fmt(DAY[idx][0])+(day?' · Day':' · Night');$('#nowTitle').textContent=DAY[idx][1];$('#nowText').textContent=DAY[idx][2];
+  dial.querySelectorAll('.evdot').forEach(c=>c.classList.toggle('on',+c.dataset.i===idx));
+  document.querySelectorAll('#daylist button').forEach(b=>b.classList.toggle('on',+b.dataset.i===idx));
+}
+let timer=null;
+function stop(){if(timer){clearInterval(timer);timer=null;$('#play').textContent='▶';$('#play').setAttribute('aria-label','Play the day');}}
+$('#hour').addEventListener('input',e=>{stop();setHour(+e.target.value);});
+dial.addEventListener('click',e=>{const c=e.target.closest('.evdot');if(c){stop();setHour(DAY[+c.dataset.i][0]);}});
+$('#daylist').addEventListener('click',e=>{const b=e.target.closest('button');if(b){stop();setHour(DAY[+b.dataset.i][0]);}});
+$('#play').onclick=()=>{if(timer){stop();return;}$('#play').textContent='❚❚';$('#play').setAttribute('aria-label','Pause');timer=setInterval(()=>{let h=+$('#hour').value+.25;if(h>23.75)h=0;setHour(h);},reduce?400:120);};
+setHour(4.75);
+
+/* ---------- quiz ---------- */
+const Q=[
+  {title:'Sky or ground?',q:'A hawk\'s shadow sweeps across the yard. What do you tell the flock?',o:[['Yell "Help!" (one alarm for everything)',0,'One word for every kind of danger? Adorable. Half the flock ran into the open.'],['A high, thin scream, then freeze',1,'Correct. That call means "danger from above". Everyone crouches and looks up.'],['A low "tuk-tuk-tuk" and stare at the bushes',0,'That is our call for a fox on the ground. You just sent everyone looking the wrong way.']],sci:'Chickens give different alarm calls for aerial and ground predators, and other chickens react correctly even to recordings (Evans, Evans & Marler, 1993).'},
+  {title:'Know your rank',q:'Henrietta beats Marge in fights. Marge beats you. Should you challenge Henrietta?',o:[['Yes. I\'ve never lost to her.',0,'Bold. Also wrong. You just lost a feather and your place at the feeder.'],['No. She beats Marge, and Marge beats me.',1,'Correct. We work out rank by watching, so we don\'t have to fight everyone.']],sci:'Hens that watch a stranger beat a hen that dominates them avoid challenging that stranger (Hogue, Beaugrand & Laguë, 1996).'},
+  {title:'Count the mealworms',q:'Three mealworms roll behind the left screen and two behind the right. Then one moves from left to right. Where do you go?',o:[['Left screen',0,'Left now has two. Right has three. You can\'t count, can you?'],['Right screen',1,'Correct. Three beats two. Our five-day-old chicks get this one.'],['Impossible to know, they\'re hidden',0,'They\'re hidden, not gone. Keep track.']],sci:'Newly hatched chicks track objects moving between screens and pick the larger group (Rugani et al., 2009).'},
+  {title:'Patience',q:'You can peck now for one seed, or wait a few seconds for a whole beakful. Which?',o:[['Peck now',0,'Impulsive. The hen next to you waited and got the jackpot.'],['Wait for the beakful',1,'Correct. Self-control is very chicken.']],sci:'In choice tests, hens learned to hold off for a larger delayed reward instead of taking a small one right away (Abeyesinghe et al., 2005).'},
+  {title:'Which eye?',q:'You\'re picking seeds out of the gravel and watching for hawks at the same time. Which eye watches the sky?',o:[['Left eye',1,'Correct. The right eye sorts food, the left eye watches for danger.'],['Right eye',0,'That one is busy telling seeds from pebbles.'],['Both, equally',0,'Our brains split the work. Yours probably should too.']],sci:'Chicken brains are lateralized: chicks use the right eye to sort grain from pebbles and the left eye to spot predators (research by Lesley Rogers).'},
+  {title:'The rooster\'s trick',q:'You\'re a rooster. A hen you like is across the yard. There is no food. What do you do?',o:[['Walk over and say hello',0,'Sweet, but slow. Another rooster got there first.'],['Give the food call anyway',1,'Correct, and a little shameless. She came running.'],['Crow',0,'That\'s for territory. She ignored you.']],sci:'Roosters sometimes make food calls with no food present, more often when a hen is far away (Gyger & Marler, 1988).'},
+  {title:'Where did it go?',q:'A mealworm slides behind a screen. Where is it now?',o:[['It stopped existing',0,'Human babies say this until they\'re several months old. Our chicks pass at two days.'],['Still behind the screen',1,'Correct. Object permanence, achieved before breakfast.']],sci:'Young chicks search behind the correct screen for a hidden object, showing object permanence within days of hatching (Vallortigara et al., 1998).'},
+  {title:'Which way do numbers go?',q:'You learned that the 4th seed in a row is the tasty one. The row is turned sideways. Which end do you count from?',o:[['From the left',1,'Correct. Small numbers on the left, like a ruler.'],['From the right',0,'Backwards. The tasty seed is gone.'],['From the middle',0,'Creative. Not correct.']],sci:'Three-day-old chicks link small numbers with the left and large numbers with the right, a mental number line (Rugani et al., 2015).'}
+];
+const RANKS=[[2,'Still an egg','Not yet hatched. Come back after 21 days of thinking.'],[4,'Pullet','A young hen with potential. You\'d eat after the others.'],[6,'Hen in good standing','Respected in the flock. Middle of the perch.'],[8,'Head hen','Top of the pecking order. Everyone moves aside at the feeder.']];
+let qi=0,answers=[];
+function renderScore(){$('#score').innerHTML=Q.map((_,i)=>`<i class="${answers[i]===1?'ok':answers[i]===0?'no':i===qi?'cur':''}" title="Question ${i+1}"></i>`).join('');}
+function renderQ(){
+  renderScore();
+  if(qi>=Q.length){const s=answers.filter(a=>a===1).length,r=RANKS.find(r=>s<=r[0]);
+    $('#qnum').textContent='Results';$('#qtitle').textContent=`${s} of ${Q.length} eggs`;
+    $('#qcard').innerHTML=`<div style="display:grid;gap:14px"><p class="mono">Your rank in the flock</p><h4 style="font-size:clamp(30px,4vw,46px)">${r[1]}</h4><p>${r[2]}</p><p style="color:var(--muted);font-size:14px">Every question is based on a peer-reviewed study of chicken behavior.</p><div class="qfoot"><button class="btn" type="button" id="again">Retake the exam</button></div></div>`;
+    $('#again').onclick=()=>{qi=0;answers=[];renderQ();};return;}
+  const q=Q[qi];
+  $('#qnum').textContent=`Question ${qi+1} of ${Q.length}`;$('#qtitle').textContent=q.title;
+  $('#qcard').innerHTML=`<p class="mono">The question</p><h4>${q.q}</h4><div class="opts">${q.o.map((o,i)=>`<button class="opt" type="button" data-i="${i}"><span class="k">${'ABC'[i]}</span><span>${o[0]}</span></button>`).join('')}</div><div id="reply"></div>`;
+  $('#qcard .opts').addEventListener('click',e=>{
+    const b=e.target.closest('.opt');if(!b||b.disabled)return;const o=q.o[+b.dataset.i];answers[qi]=o[1];
+    $('#qcard').querySelectorAll('.opt').forEach((x,i)=>{x.disabled=true;if(q.o[i][1])x.classList.add('right');});
+    if(!o[1])b.classList.add('wrong');
+    $('#reply').innerHTML=`<div class="reply${o[1]?'':' bad'}"><span class="mono">The head hen says</span><span class="says">${o[2]}</span><span class="sci">${q.sci}</span></div><div class="qfoot" style="margin-top:16px"><span class="mono">${o[1]?'+1 egg':'No egg'}</span><button class="btn" type="button" id="next">${qi===Q.length-1?'See your rank':'Next question'}</button></div>`;
+    renderScore();$('#next').onclick=()=>{qi++;renderQ();};$('#next').focus({preventScroll:true});
+  });
+}
+renderQ();
+
+/* ---------- relationships ---------- */
+const REL=[
+  {id:'jungle',side:'env',n:'Wild kin',ic:'FOREST',v:'descends from',big:'20–50%',bl:'domestic DNA now found in some wild red junglefowl',d:'Chickens came from red junglefowl in Asian forests. Now the flow runs backwards: farm chickens breed with wild junglefowl, and their genes are diluting the wild species.',src:'Wu et al., 2020'},
+  {id:'soil',side:'env',n:'Soil',ic:'GROUND',v:'scratches',big:'N · P · K',bl:'chicken manure is rich in all three plant nutrients',d:'Scratching turns soil and buries seeds. Manure feeds plants. Too many birds in one spot strips the ground bare and overloads it with nutrients that run off into rivers.',src:''},
+  {id:'insects',side:'env',n:'Insects',ic:'PREY',v:'eats',big:'Omnivore',bl:'beetles, grubs, ticks, worms, seeds',d:'Free-ranging chickens eat ticks, beetles, grubs and weed seeds. Gardeners and farmers use them for pest control in orchards and after harvest.',src:''},
+  {id:'pred',side:'env',n:'Predators',ic:'HUNTERS',v:'is hunted by',big:'2',bl:'separate alarm calls, for sky and ground',d:'Foxes, hawks, raccoons, weasels and snakes all hunt chickens. Much of chicken behavior, from roosting high to one-eyed sleep, is built around not being eaten.',src:''},
+  {id:'disease',side:'env',n:'Microbes',ic:'DISEASE',v:'shares',big:'H5N1',bl:'avian flu moves between wild birds, poultry and mammals',d:'Wild waterfowl carry bird flu, and dense flocks of poultry let it spread and change. Outbreaks lead to the culling of millions of birds and are watched closely for spread to people.',src:''},
+  {id:'climate',side:'env',n:'Climate',ic:'LAND',v:'shapes',big:'~10×',bl:'less greenhouse gas per kg than beef',d:'Chicken meat has a much smaller footprint than beef, about 10 vs 100 kg CO₂e per kg. But its feed, largely corn and soy, is tied to cropland expansion and deforestation.',src:'Poore & Nemecek, 2018'},
+  {id:'food',side:'human',n:'Food',ic:'PLATE',v:'feeds',big:'#1',bl:'poultry is the most produced meat in the world',d:'Eggs and chicken are among the cheapest animal proteins on Earth. More than 70 billion chickens are raised for meat every year.',src:'FAO'},
+  {id:'breed',side:'human',n:'Breeding',ic:'INDUSTRY',v:'reshapes',big:'4×',bl:'heavier: a 2005 broiler vs a 1957 broiler at 8 weeks',d:'Selective breeding changed the bird itself. Modern broilers grow so fast that their legs and hearts can struggle. Laying hens give about 300 eggs a year; junglefowl lay about 10–15.',src:'Zuidhof et al., 2014'},
+  {id:'science',side:'human',n:'Science',ic:'LAB',v:'teaches',big:'1911',bl:'the first cancer-causing virus is found, in a chicken',d:'The chicken embryo is a classic model for studying development. Most flu vaccines are still grown in chicken eggs. The Rous sarcoma virus, found in chickens, led to the discovery of cancer genes.',src:''},
+  {id:'culture',side:'human',n:'Culture',ic:'SYMBOL',v:'inspires',big:'1 of 12',bl:'the Rooster is a sign of the Chinese zodiac',d:'The rooster is a symbol of France, sits on church weathervanes, and wakes the world in folk tales. Early chickens in Europe may have been sacred animals more than food.',src:'Best et al., 2022'},
+  {id:'friend',side:'human',n:'Companions',ic:'BACKYARD',v:'lives with',big:'By name',bl:'chickens can learn to come when called',d:'Backyard flocks are booming. Chickens learn names, respond to clicker training and recognize individual people and birds.',src:''}
+];
+const web=$('#web'),WC=[320,280],WR=200;
+const envs=REL.filter(r=>r.side==='env'),hums=REL.filter(r=>r.side==='human');
+envs.forEach((r,i)=>{const a=(110+i*(140/(envs.length-1)))*Math.PI/180;r.x=WC[0]+WR*Math.cos(a)*1.05;r.y=WC[1]-WR*Math.sin(a);});
+hums.forEach((r,i)=>{const a=(70-i*(140/(hums.length-1)))*Math.PI/180;r.x=WC[0]+WR*Math.cos(a)*1.05;r.y=WC[1]-WR*Math.sin(a);});
+web.innerHTML=`<text class="side" x="24" y="30">ENVIRONMENT</text><text class="side" x="616" y="30" text-anchor="end">HUMANS</text>
+${REL.map(r=>{const mx=(WC[0]+r.x)/2,my=(WC[1]+r.y)/2;return`<line class="edge" data-id="${r.id}" x1="${WC[0]}" y1="${WC[1]}" x2="${r.x.toFixed(1)}" y2="${r.y.toFixed(1)}"/><text class="elabel" data-id="${r.id}" x="${mx.toFixed(1)}" y="${(my-5).toFixed(1)}">${r.v}</text>`;}).join('')}
+<g class="center"><circle cx="${WC[0]}" cy="${WC[1]}" r="52"/><text x="${WC[0]}" y="${WC[1]}" dy=".35em">Chicken</text></g>
+${REL.map(r=>`<g class="node ${r.side}" data-id="${r.id}" tabindex="0" role="button" aria-label="${r.n}"><circle cx="${r.x.toFixed(1)}" cy="${r.y.toFixed(1)}" r="38"/><text x="${r.x.toFixed(1)}" y="${(r.y-3).toFixed(1)}">${r.n}</text><text class="ic" x="${r.x.toFixed(1)}" y="${(r.y+13).toFixed(1)}">${r.ic}</text></g>`).join('')}`;
+let relSel='breed',relF='all';
+function renderRel(){
+  const r=REL.find(x=>x.id===relSel);
+  web.querySelectorAll('.node').forEach(g=>{g.classList.toggle('on',g.dataset.id===relSel);g.classList.toggle('dim',relF!=='all'&&!g.classList.contains(relF));});
+  web.querySelectorAll('.edge,.elabel').forEach(l=>{const rr=REL.find(x=>x.id===l.dataset.id);l.classList.toggle('on',l.dataset.id===relSel);l.classList.toggle('dim',relF!=='all'&&rr.side!==relF);});
+  $('#relcard').innerHTML=`<p class="mono">${r.side==='env'?'Environment':'Humans'} · chicken ${r.v} ${r.n.toLowerCase()}</p><h3>${r.n}</h3><div><div class="big">${r.big}</div><p class="bigl">${r.bl}</p></div><p>${r.d}</p>${r.src?`<p class="src">Source: ${r.src}</p>`:''}`;
+}
+web.addEventListener('click',e=>{const g=e.target.closest('.node');if(g){relSel=g.dataset.id;renderRel();}});
+web.addEventListener('keydown',e=>{const g=e.target.closest('.node');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();relSel=g.dataset.id;renderRel();}});
+$('#relSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;relF=b.dataset.f;document.querySelectorAll('#relSeg button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  const cur=REL.find(x=>x.id===relSel);if(relF!=='all'&&cur.side!==relF)relSel=(relF==='env'?envs:hums)[0].id;renderRel();});
+renderRel();
+
+/* ---------- router ---------- */
+const VIEWS=['home','anatomy','breeds','timeline','intelligence','relationships'];
+const views=[...document.querySelectorAll('.view')],tabs=[...document.querySelectorAll('.nav a.tab')];
+function route(){
+  let v=location.hash.slice(1);if(!VIEWS.includes(v))v='home';
+  views.forEach(el=>el.hidden=el.dataset.view!==v);
+  tabs.forEach(t=>t.classList.toggle('on',t.getAttribute('href')==='#'+v));
+  if(v==='breeds')renderGuide();
+  if(v==='timeline')railUpdate();
+  if(v!=='timeline')stop();
+  window.scrollTo(0,0);
+}
+addEventListener('hashchange',route);
+route();
+})();
+</script>
+
+</body>
+</html>
